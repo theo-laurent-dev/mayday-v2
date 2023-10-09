@@ -33,7 +33,13 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## Environment Variables.
+## Environment Variables
 
 `DATABASE_URL="mysql://user:password@host:port/database"`
 `NEXTAUTH_SECRET=123456789abcdefghijklmnopqrstuvwxyz`
+
+## Start
+
+- `npm install`
+- `npx prisma db push`
+- `npx prisma generate`
