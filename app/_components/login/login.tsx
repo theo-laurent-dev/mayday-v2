@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -44,6 +44,7 @@ const defaultValues: Partial<AccountFormValues> = {
 const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
   const router = useRouter();
   const session = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (session.status === "authenticated") {
@@ -66,11 +67,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
     //   ),
     // });
 
+    setIsLoading(true);
+
     signIn("credentials", {
       ...data,
       redirect: false,
     }).then((callback) => {
       if (callback?.ok) {
+        setIsLoading(false);
         toast({
           title: "Connecté !",
           description: "Redirection vers le Dashboard ...",
@@ -119,7 +123,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={isLoading}>
           Connexion
         </Button>
       </form>
