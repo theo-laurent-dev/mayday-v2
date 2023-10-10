@@ -33,6 +33,15 @@ const NavItems = ({ className, session }: MainNavInterface) => {
       >
         Articles
       </Link>
+      <Link
+        href="/sheets"
+        className={cn(
+          "text-sm font-medium text-muted-foreground transition-colors hover:text-primary",
+          path === "/sheets" && "text-black"
+        )}
+      >
+        Procédures
+      </Link>
     </nav>
   );
 };

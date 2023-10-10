@@ -93,9 +93,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
 
   return (
     <Form {...form}>
-      <h1 className="text-center scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-        Connexion
-      </h1>
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+          Connexion
+        </h1>
+        <span className="text-gray-400 font-bold">MAYDAY</span>
+      </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
         <FormField
           control={form.control}

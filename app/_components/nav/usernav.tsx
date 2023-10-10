@@ -10,9 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { GanttChart, LayoutDashboard } from "lucide-react";
 
 const UserNav = () => {
   const session = useSession();
@@ -41,18 +42,17 @@ const UserNav = () => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            <Link href={"/dashboard"} className="flex items-center">
+              <LayoutDashboard className="w-5 h-5 mr-2 text-gray-500" />
+              Dashboard
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+            <Link href={"/sheets"} className="flex items-center">
+              <GanttChart className="w-5 h-5 mr-2 text-gray-500" />
+              Procédures
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -60,7 +60,6 @@ const UserNav = () => {
           onClick={() => signOut()}
         >
           Déconnexion
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

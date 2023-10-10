@@ -6,6 +6,45 @@ import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
 
 export const appRouter = router({
+  register: publicProcedure
+    .input(
+      z.object({
+        name: z
+          .string()
+          .min(2, {
+            message: "Le nom doit faire au moins 2 caractères.",
+          })
+          .max(30, "Le nom ne doit pas excéder 30 caractères."),
+        email: z
+          .string()
+          .min(2, {
+            message: "L'email doit faire au moins 2 caractères.",
+          })
+          .email("Ce n'est pas un mail valide."),
+        password: z
+          .string()
+          .min(6, {
+            message: "Le mot de passe doit faire au minimum 6 caractères.",
+          })
+          .max(30, {
+            message: "Le mot de passe ne doit pas excéder 30 caractères.",
+          }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name, email, password } = input;
+
+      const hashedPassword = await bcrypt.hash(password, 12);
+      const user = await db.user.create({
+        data: {
+          name,
+          email,
+          hashedPassword,
+        },
+      });
+
+      return user;
+    }),
   getArticles: privateProcedure.query(async ({ ctx }) => {
     return await db.article.findMany();
   }),
@@ -91,44 +130,59 @@ export const appRouter = router({
 
       return article;
     }),
-  register: publicProcedure
-    .input(
-      z.object({
-        name: z
-          .string()
-          .min(2, {
-            message: "Le nom doit faire au moins 2 caractères.",
-          })
-          .max(30, "Le nom ne doit pas excéder 30 caractères."),
-        email: z
-          .string()
-          .min(2, {
-            message: "L'email doit faire au moins 2 caractères.",
-          })
-          .email("Ce n'est pas un mail valide."),
-        password: z
-          .string()
-          .min(6, {
-            message: "Le mot de passe doit faire au minimum 6 caractères.",
-          })
-          .max(30, {
-            message: "Le mot de passe ne doit pas excéder 30 caractères.",
-          }),
-      })
-    )
+  getSheets: privateProcedure.query(async ({ ctx }) => {
+    return await db.sheet.findMany();
+  }),
+  addSheet: privateProcedure
+    .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { name, email, password } = input;
+      const user = await getCurrentUser();
 
-      const hashedPassword = await bcrypt.hash(password, 12);
-      const user = await db.user.create({
+      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.create({
         data: {
-          name,
-          email,
-          hashedPassword,
+          title: input.title,
+          userId: user.id,
         },
       });
 
-      return user;
+      return sheet;
+    }),
+  updateSheet: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await getCurrentUser();
+
+      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findUniqueOrThrow({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedSheet = await db.sheet.update({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+        data: {
+          title: input.title,
+          description: input.description,
+        },
+      });
+
+      return updatedSheet;
     }),
 });
 
