@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
+import { SheetFormSchema } from "@/types/forms";
 
 export const appRouter = router({
   register: publicProcedure
@@ -150,13 +151,7 @@ export const appRouter = router({
       return sheet;
     }),
   updateSheet: privateProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string().optional(),
-      })
-    )
+    .input(SheetFormSchema)
     .mutation(async ({ ctx, input }) => {
       const user = await getCurrentUser();
 
@@ -178,7 +173,15 @@ export const appRouter = router({
         },
         data: {
           title: input.title,
+          shortDescription: input.shortDescription,
           description: input.description,
+          category: input.category,
+          subcategory: input.subcategory,
+          categoryType: input.categoryType,
+          assignmentGroup: input.assignmentGroup,
+          criticity: input.criticity,
+          type: input.type,
+          published: input.published,
         },
       });
 

@@ -22,12 +22,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Link from "next/link";
 import { PartyPopper } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SheetFormSchema } from "@/types/forms";
 
 const steps = [
   { label: "Etape 1", description: "Titre" },
-  { label: "Etape 2", description: "Description" },
+  { label: "Etape 2", description: "Procédure" },
   { label: "Etape 3", description: "Qualification" },
-  //   { label: "Etape 4", description: "Publication" },
+  { label: "Etape 4", description: "Publication" },
+  { label: "Etape 5", description: "Autres" },
 ] satisfies StepConfig[];
 
 export default function StepperSheetCreation() {
@@ -45,26 +49,8 @@ export default function StepperSheetCreation() {
     steps,
   });
 
-  const FormSchema = z.object({
-    title: z.string().min(2, {
-      message: "Title must be at least 2 characters.",
-    }),
-    description: z
-      .string()
-      .min(2, {
-        message: "Description must be at least 2 characters.",
-      })
-      .optional(),
-    category: z
-      .string()
-      .min(2, {
-        message: "Category must be at least 2 characters.",
-      })
-      .optional(),
-  });
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SheetFormSchema>>({
+    resolver: zodResolver(SheetFormSchema),
   });
 
   const { mutate: addSheet, isLoading: isCreating } = trpc.addSheet.useMutation(
@@ -89,7 +75,7 @@ export default function StepperSheetCreation() {
       },
     });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: z.infer<typeof SheetFormSchema>) {
     if (isDisabledStep && id === "") {
       addSheet({ ...data });
     }
@@ -107,7 +93,7 @@ export default function StepperSheetCreation() {
               <Step index={index} key={index} {...step}>
                 <div className="w-full p-4 text-slate-900 dark:bg-slate-300">
                   {activeStep === 0 && (
-                    <>
+                    <div className="mt-4 flex flex-col space-y-6">
                       <h1 className="font-bold text-xl">{step.description}</h1>
                       <FormField
                         control={form.control}
@@ -119,72 +105,263 @@ export default function StepperSheetCreation() {
                               <Input placeholder="shadcn" {...field} />
                             </FormControl>
                             <FormDescription>
-                              This is the public display name.
+                              Titre de votre procédure.
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </>
+                    </div>
                   )}
                   {activeStep === 1 && (
-                    <>
+                    <div className="mt-4 flex flex-col space-y-6">
+                      <h1 className="font-bold text-xl">{step.description}</h1>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">Description</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Informations concernant la procédure.
+                          </p>
+                        </div>
+                        <Separator />
+                        <FormField
+                          control={form.control}
+                          name="shortDescription"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Description courte</FormLabel>
+                              <FormControl>
+                                <Input placeholder="shadcn" {...field} />
+                              </FormControl>
+                              <FormDescription>
+                                Brève description de la procédure.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Description</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  rows={10}
+                                  placeholder="shadcn"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Toutes les étapes de la procédure.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            Pièces-jointes
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Liste des pièces-jointes rattachées.
+                          </p>
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="assignmentGroup"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pièces-jointes</FormLabel>
+                                <FormControl>
+                                  <Input type="file" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  {`Correspond au groue d'assignation ServiceNow.`}
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {activeStep === 2 && (
+                    <div className="mt-4 flex flex-col space-y-6">
+                      <h1 className="font-bold text-xl">{step.description}</h1>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            Catégorisation
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Comment catégoriseriez-vous les tickets ?
+                          </p>
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Catégorie</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="shadcn" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  Correspond à la catégorie ServiceNow.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="subcategory"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Sous-Catégorie</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="shadcn" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  Correspond à la sous-catégorie ServiceNow.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="categoryType"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Type de catégorie</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="shadcn" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  Correspond au type de catégorie ServiceNow.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">Impact</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Quel impact ?
+                          </p>
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="criticity"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Criticité</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="shadcn" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  Correspond à la criticité ServiceNow.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">Escalade</h3>
+                          <p className="text-sm text-muted-foreground">
+                            A quel groupe les tickets doivent-ils être escaladés
+                            ?
+                          </p>
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="assignmentGroup"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{`Groupe d'assignation`}</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="shadcn" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  {`Correspond au groue d'assignation ServiceNow.`}
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {activeStep === 3 && (
+                    <div className="mt-4 flex flex-col space-y-6">
                       <h1 className="font-bold text-xl">{step.description}</h1>
                       <FormField
                         control={form.control}
-                        name="description"
+                        name="published"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Titre</FormLabel>
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                             <FormControl>
-                              <Textarea
-                                rows={10}
-                                placeholder="shadcn"
-                                {...field}
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
                               />
                             </FormControl>
-                            <FormDescription>
-                              This is the public display name.
-                            </FormDescription>
-                            <FormMessage />
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>Publier ma procédure</FormLabel>
+                              <FormDescription>
+                                Vous pouvez la publier plus tard en modifiant la
+                                procédure.
+                              </FormDescription>
+                            </div>
                           </FormItem>
                         )}
                       />
-                    </>
+                    </div>
                   )}
-                  {activeStep === 2 && (
-                    <>
+                  {activeStep === 4 && (
+                    <div className="mt-4 flex flex-col space-y-6">
                       <h1 className="font-bold text-xl">{step.description}</h1>
                       <FormField
                         control={form.control}
-                        name="category"
+                        name="type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Catégorie</FormLabel>
+                            <FormLabel>Type de procédure</FormLabel>
                             <FormControl>
                               <Input placeholder="shadcn" {...field} />
                             </FormControl>
                             <FormDescription>
-                              This is the public display name.
+                              Maintenance, procédure, ...
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </>
+                    </div>
                   )}
-                  {/* {activeStep === 3 && (
-                    <>
-                      <h1 className="font-bold text-xl">{step.description}</h1>
-                      <div>
-                        <Label htmlFor="status">Etat</Label>
-                        <Input
-                          id="status"
-                          placeholder="Publiée, brouillon, ..."
-                        />
-                      </div>
-                    </>
-                  )} */}
                 </div>
               </Step>
             ))}
@@ -220,7 +397,11 @@ export default function StepperSheetCreation() {
                 </Button>
 
                 <Button type="submit" disabled={isCreating || isUpdating}>
-                  {isOptionalStep ? "Passer" : "Suivant"}
+                  {isLastStep
+                    ? "Terminer"
+                    : isOptionalStep
+                    ? "Passer"
+                    : "Suivant"}
                 </Button>
               </div>
             </div>

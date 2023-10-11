@@ -8,7 +8,7 @@ export default function Home() {
   const [form, setForm] = useState("login");
 
   return (
-    <div className="py-4 space-y-8">
+    <div className="p-4 space-y-8">
       {form === "login" && <LoginForm setForm={setForm} />}
       {form === "register" && <RegisterForm setForm={setForm} />}
     </div>
