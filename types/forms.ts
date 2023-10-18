@@ -54,4 +54,10 @@ export const SheetFormSchema = z.object({
     })
     .optional(),
   published: z.boolean().default(false).optional(),
+  company: z
+    .string()
+    .min(2, {
+      message: "Society must be at least 2 characters.",
+    })
+    .optional(),
 });

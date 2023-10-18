@@ -14,7 +14,7 @@ export default function Dashboard() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <Link href={"/sheets/new"}>
-          <Button>Nouvelle prodécure</Button>
+          <Button>Nouvelle fiche</Button>
         </Link>
       </div>
       <Kpi />

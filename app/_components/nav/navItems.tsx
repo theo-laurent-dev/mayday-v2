@@ -40,7 +40,7 @@ const NavItems = ({ className, session }: MainNavInterface) => {
           path === "/sheets" && "text-black"
         )}
       >
-        Procédures
+        Fiches
       </Link>
     </nav>
   );

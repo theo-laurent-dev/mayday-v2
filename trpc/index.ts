@@ -134,6 +134,17 @@ export const appRouter = router({
   getSheets: privateProcedure.query(async ({ ctx }) => {
     return await db.sheet.findMany();
   }),
+  getSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const sheet = await db.sheet.findFirstOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+      return sheet;
+    }),
   addSheet: privateProcedure
     .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -182,6 +193,7 @@ export const appRouter = router({
           criticity: input.criticity,
           type: input.type,
           published: input.published,
+          company: input.company,
         },
       });
 

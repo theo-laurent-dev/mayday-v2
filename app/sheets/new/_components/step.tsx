@@ -21,10 +21,29 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Link from "next/link";
-import { PartyPopper } from "lucide-react";
+import {
+  AlertOctagon,
+  Building,
+  Building2,
+  Castle,
+  GanttChart,
+  Info,
+  PartyPopper,
+  Wrench,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { SheetFormSchema } from "@/types/forms";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 const steps = [
   { label: "Etape 1", description: "Titre" },
@@ -57,7 +76,7 @@ export default function StepperSheetCreation() {
     {
       onSuccess: (data) => {
         toast({
-          title: "Procédure créée",
+          title: "Fiche créée",
         });
         setId(data.id);
         nextStep();
@@ -102,7 +121,10 @@ export default function StepperSheetCreation() {
                           <FormItem>
                             <FormLabel>Titre</FormLabel>
                             <FormControl>
-                              <Input placeholder="shadcn" {...field} />
+                              <Input
+                                placeholder="Création de compte, exploitation WMS Girpi, ..."
+                                {...field}
+                              />
                             </FormControl>
                             <FormDescription>
                               Titre de votre procédure.
@@ -182,7 +204,7 @@ export default function StepperSheetCreation() {
                                   <Input type="file" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                  {`Correspond au groue d'assignation ServiceNow.`}
+                                  5Mo maximum / pj
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -213,7 +235,10 @@ export default function StepperSheetCreation() {
                               <FormItem>
                                 <FormLabel>Catégorie</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="shadcn" {...field} />
+                                  <Input
+                                    placeholder="Business Application, Hardware, Software, ..."
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormDescription>
                                   Correspond à la catégorie ServiceNow.
@@ -229,7 +254,10 @@ export default function StepperSheetCreation() {
                               <FormItem>
                                 <FormLabel>Sous-Catégorie</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="shadcn" {...field} />
+                                  <Input
+                                    placeholder="ERP, Printer, ..."
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormDescription>
                                   Correspond à la sous-catégorie ServiceNow.
@@ -247,7 +275,10 @@ export default function StepperSheetCreation() {
                               <FormItem>
                                 <FormLabel>Type de catégorie</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="shadcn" {...field} />
+                                  <Input
+                                    placeholder="Issue, Error, Access, ..."
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormDescription>
                                   Correspond au type de catégorie ServiceNow.
@@ -273,11 +304,44 @@ export default function StepperSheetCreation() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Criticité</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="shadcn" {...field} />
-                                </FormControl>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Sélectionner ..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="critical">
+                                      <div className="flex items-center space-x-2">
+                                        <AlertOctagon className="w-4 h-4 text-red-500" />
+                                        <span>Critique</span>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="high">
+                                      <div className="flex items-center space-x-2">
+                                        <AlertOctagon className="w-4 h-4 text-orange-500" />
+                                        <span>Haute</span>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="medium">
+                                      <div className="flex items-center space-x-2">
+                                        <AlertOctagon className="w-4 h-4 text-yellow-500" />
+                                        <span>Moyenne</span>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="low">
+                                      <div className="flex items-center space-x-2">
+                                        <AlertOctagon className="w-4 h-4 text-gray-500" />
+                                        <span>Basse</span>
+                                      </div>
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
                                 <FormDescription>
-                                  Correspond à la criticité ServiceNow.
+                                  Criticité à saisir dans ServiceNow.
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -301,11 +365,47 @@ export default function StepperSheetCreation() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>{`Groupe d'assignation`}</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="shadcn" {...field} />
-                                </FormControl>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Sélectionner ..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      <SelectLabel>Applicatif</SelectLabel>
+                                      <SelectItem value="FR_APP_L2">
+                                        FR_APP_L2
+                                      </SelectItem>
+                                      <SelectItem value="FR_APP_L3">
+                                        FR_APP_L3
+                                      </SelectItem>
+                                    </SelectGroup>
+                                    <SelectGroup>
+                                      <SelectLabel>Proximité</SelectLabel>
+                                      <SelectItem value="FR_EUT_L2">
+                                        FR_EUT_L2
+                                      </SelectItem>
+                                    </SelectGroup>
+                                    <SelectGroup>
+                                      <SelectLabel>Infrastructure</SelectLabel>
+                                      <SelectItem value="EMA_DC_L2">
+                                        EMA_DC_L2
+                                      </SelectItem>
+                                    </SelectGroup>
+                                    <SelectGroup>
+                                      <SelectLabel>Réseau</SelectLabel>
+                                      <SelectItem value="EMA_NS_L2">
+                                        EMA_NS_L2
+                                      </SelectItem>
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
                                 <FormDescription>
-                                  {`Correspond au groue d'assignation ServiceNow.`}
+                                  Groupe à saisir dans ServiceNow.
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -322,20 +422,23 @@ export default function StepperSheetCreation() {
                         control={form.control}
                         name="published"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Publier ma procédure</FormLabel>
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base">
+                                Publier ma procédure
+                              </FormLabel>
                               <FormDescription>
-                                Vous pouvez la publier plus tard en modifiant la
-                                procédure.
+                                Vous pouvez publier votre procédure dès sa
+                                création ou bien le faire plus tard.
                               </FormDescription>
                             </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-readonly
+                              />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
@@ -344,22 +447,116 @@ export default function StepperSheetCreation() {
                   {activeStep === 4 && (
                     <div className="mt-4 flex flex-col space-y-6">
                       <h1 className="font-bold text-xl">{step.description}</h1>
-                      <FormField
-                        control={form.control}
-                        name="type"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Type de procédure</FormLabel>
-                            <FormControl>
-                              <Input placeholder="shadcn" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Maintenance, procédure, ...
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">Type de fiche</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {`Quelle sera l'utilité de cette fiche ?`}
+                          </p>
+                        </div>
+                        <Separator />
+                        <FormField
+                          control={form.control}
+                          name="type"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Type</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner ..." />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="procedure">
+                                    <div className="flex items-center space-x-2">
+                                      <GanttChart className="w-4 h-4" />
+                                      <span>Procédure</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="maintenance">
+                                    <div className="flex items-center space-x-2">
+                                      <Wrench className="w-4 h-4" />
+                                      <span>Maintenance</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="informative">
+                                    <div className="flex items-center space-x-2">
+                                      <Info className="w-4 h-4" />
+                                      <span>Informatif</span>
+                                    </div>
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">Société</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Quelle(s) société(s) cette fiche fait référence ?
+                          </p>
+                        </div>
+                        <Separator />
+                        <FormField
+                          control={form.control}
+                          name="company"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Société</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner ..." />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="all">
+                                    <div className="flex items-center space-x-2">
+                                      <Building2 className="w-4 h-4" />
+                                      <span>Toutes</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="aliaxis">
+                                    <div className="flex items-center space-x-2 text-blue-500">
+                                      <Castle className="w-4 h-4" />
+                                      <span>Aliaxis</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="nicoll">
+                                    <div className="flex items-center space-x-2 text-red-500">
+                                      <Building className="w-4 h-4" />
+                                      <span>Nicoll</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="girpi">
+                                    <div className="flex items-center space-x-2 text-orange-500">
+                                      <Building className="w-4 h-4" />
+                                      <span>Girpi</span>
+                                    </div>
+                                  </SelectItem>
+                                  <SelectItem value="aui">
+                                    <div className="flex items-center space-x-2 text-purple-500">
+                                      <Building className="w-4 h-4" />
+                                      <span>AUI</span>
+                                    </div>
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -379,14 +576,18 @@ export default function StepperSheetCreation() {
                 </span>
                 <Link href={`/sheets/${id}`}>
                   <Button type="button" variant="secondary">
-                    Accéder à ma procédure
+                    Accéder à ma fiche
                   </Button>
                 </Link>
               </div>
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm italic">{`Pour enregistrer vos modifications, cliquez sur "Suivant".`}</span>
+              <span className="text-gray-400 text-sm italic">
+                {isLastStep
+                  ? `Pour terminer votre procédure, cliquez sur "Terminer".`
+                  : `Pour enregistrer vos modifications, cliquez sur "Suivant".`}
+              </span>
               <div className="flex items-center space-x-2">
                 <Button
                   disabled={isDisabledStep || isUpdating}
