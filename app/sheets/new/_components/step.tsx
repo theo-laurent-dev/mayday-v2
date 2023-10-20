@@ -5,6 +5,7 @@ import { Step, StepConfig, Steps } from "@/components/ui/stepper";
 import { useStepper } from "@/components/ui/use-stepper";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Editor } from "@tinymce/tinymce-react";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
 import { z } from "zod";
@@ -67,6 +68,13 @@ export default function StepperSheetCreation() {
     initialStep: 0,
     steps,
   });
+
+  const handleEditorChange = (content: any, editor: any) => {
+    // console.log("Content was updated:", content.level.content);
+    form.setValue("description", content.level.content);
+  };
+
+  const initial = `<p>This is the initial content of the editor.</p><h1><span style="color: rgb(53, 152, 219);" data-mce-style="color: rgb(53, 152, 219);"><strong>Hello</strong></span></h1>`;
 
   const form = useForm<z.infer<typeof SheetFormSchema>>({
     resolver: zodResolver(SheetFormSchema),
@@ -169,10 +177,69 @@ export default function StepperSheetCreation() {
                             <FormItem>
                               <FormLabel>Description</FormLabel>
                               <FormControl>
-                                <Textarea
-                                  rows={10}
-                                  placeholder="shadcn"
-                                  {...field}
+                                <Editor
+                                  apiKey="tvro04mz48z6wrzc4ek5xa4akpxfcq4qge4c39td4w5j96rm"
+                                  init={{
+                                    height: 500,
+                                    menubar: true,
+                                    plugins: [
+                                      "advlist",
+                                      "autolink",
+                                      "lists",
+                                      "link",
+                                      "image",
+                                      "charmap",
+                                      "anchor",
+                                      "searchreplace",
+                                      "visualblocks",
+                                      "code",
+                                      "fullscreen",
+                                      "insertdatetime",
+                                      "media",
+                                      "table",
+                                      "preview",
+                                      "help",
+                                      "wordcount",
+                                    ],
+                                    formats: {
+                                      h1: {
+                                        block: "h1",
+                                        attributes: {
+                                          class:
+                                            "text-3xl font-bold tracking-tight",
+                                        },
+                                      },
+                                      h2: {
+                                        block: "h2",
+                                        attributes: {
+                                          class:
+                                            "text-2xl font-bold tracking-tight",
+                                        },
+                                      },
+                                      h3: {
+                                        block: "h3",
+                                        attributes: {
+                                          class:
+                                            "text-xl font-bold tracking-tight",
+                                        },
+                                      },
+                                      h4: {
+                                        block: "h4",
+                                        attributes: {
+                                          class:
+                                            "text-lg font-bold tracking-tight",
+                                        },
+                                      },
+                                    },
+                                    toolbar:
+                                      "undo redo | blocks | " +
+                                      "bold italic forecolor | alignleft aligncenter " +
+                                      "alignright alignjustify | bullist numlist outdent indent | " +
+                                      "removeformat | help",
+                                    content_style:
+                                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                                  }}
+                                  onChange={handleEditorChange}
                                 />
                               </FormControl>
                               <FormDescription>

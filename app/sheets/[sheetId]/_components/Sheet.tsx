@@ -2,14 +2,10 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import { sheet } from "@/types/types";
-import { AlertOctagon, Building } from "lucide-react";
+import { Building } from "lucide-react";
+import parse from "html-react-parser";
 
 interface SheetProps {
   sheet: sheet | undefined;
@@ -130,7 +126,19 @@ export default function Sheet({ sheet }: SheetProps) {
               </p>
             </div>
             <Separator />
-            <div className="text-sm">{sheet?.description}</div>
+            <div className="text-sm">{parse(`${sheet?.description}`)}</div>
+          </div>
+          <div className="flex flex-col space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold tracking-tight">
+                Pièces-jointes
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Liste des pièces-jointes rattachées.
+              </p>
+            </div>
+            <Separator />
+            <div className="text-sm">Files</div>
           </div>
         </div>
       </div>
