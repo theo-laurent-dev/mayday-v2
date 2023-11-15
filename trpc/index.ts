@@ -46,6 +46,11 @@ export const appRouter = router({
 
       return user;
     }),
+  getCurrentUser: publicProcedure.query(async ({ ctx }) => {
+    const user = await getCurrentUser();
+
+    return user;
+  }),
   getArticles: privateProcedure.query(async ({ ctx }) => {
     return await db.article.findMany();
   }),
@@ -132,7 +137,11 @@ export const appRouter = router({
       return article;
     }),
   getSheets: privateProcedure.query(async ({ ctx }) => {
-    return await db.sheet.findMany();
+    return await db.sheet.findMany({
+      include: {
+        user: true,
+      },
+    });
   }),
   getSheet: privateProcedure
     .input(z.object({ id: z.string() }))
@@ -198,6 +207,30 @@ export const appRouter = router({
       });
 
       return updatedSheet;
+    }),
+  deleteSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await getCurrentUser();
+
+      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findFirst({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.sheet.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return sheet;
     }),
 });
 

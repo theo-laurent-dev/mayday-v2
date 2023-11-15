@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Step, StepConfig, Steps } from "@/components/ui/stepper";
 import { useStepper } from "@/components/ui/use-stepper";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Editor } from "@tinymce/tinymce-react";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { categories, subcategories, categoryTypes } from "@/data/sheets";
 
 const steps = [
   { label: "Etape 1", description: "Titre" },
@@ -56,6 +57,8 @@ const steps = [
 
 export default function StepperSheetCreation() {
   const [id, setId] = useState("");
+  const [subcategoriesDisabled, setSubcategoriesDisabled] =
+    useState<boolean>(true);
   const {
     nextStep,
     prevStep,
@@ -72,6 +75,15 @@ export default function StepperSheetCreation() {
   const handleEditorChange = (content: any, editor: any) => {
     // console.log("Content was updated:", content.level.content);
     form.setValue("description", content.level.content);
+  };
+  const handleCategoryChange = (value: string) => {
+    form.resetField("subcategory");
+    if (value !== undefined) {
+      form.setValue("category", value);
+      setSubcategoriesDisabled(false);
+      return;
+    }
+    setSubcategoriesDisabled(true);
   };
 
   const initial = `<p>This is the initial content of the editor.</p><h1><span style="color: rgb(53, 152, 219);" data-mce-style="color: rgb(53, 152, 219);"><strong>Hello</strong></span></h1>`;
@@ -134,9 +146,6 @@ export default function StepperSheetCreation() {
                                 {...field}
                               />
                             </FormControl>
-                            <FormDescription>
-                              Titre de votre procédure.
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -161,11 +170,8 @@ export default function StepperSheetCreation() {
                             <FormItem>
                               <FormLabel>Description courte</FormLabel>
                               <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input {...field} />
                               </FormControl>
-                              <FormDescription>
-                                Brève description de la procédure.
-                              </FormDescription>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -242,9 +248,6 @@ export default function StepperSheetCreation() {
                                   onChange={handleEditorChange}
                                 />
                               </FormControl>
-                              <FormDescription>
-                                Toutes les étapes de la procédure.
-                              </FormDescription>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -287,7 +290,7 @@ export default function StepperSheetCreation() {
                       <div className="flex flex-col space-y-4">
                         <div>
                           <h3 className="text-lg font-medium">
-                            Catégorisation
+                            Catégorisation (ServiceNow)
                           </h3>
                           <p className="text-sm text-muted-foreground">
                             Comment catégoriseriez-vous les tickets ?
@@ -301,15 +304,29 @@ export default function StepperSheetCreation() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Catégorie</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Business Application, Hardware, Software, ..."
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  Correspond à la catégorie ServiceNow.
-                                </FormDescription>
+                                <Select
+                                  onValueChange={handleCategoryChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Sélectionner ..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {categories.map((category) => (
+                                      <SelectItem
+                                        key={category.id}
+                                        value={category.value}
+                                      >
+                                        <div className="flex items-center space-x-2">
+                                          <category.icon className="w-4 h-4" />
+                                          <span>{category.label}</span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -320,15 +337,36 @@ export default function StepperSheetCreation() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Sous-Catégorie</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="ERP, Printer, ..."
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  Correspond à la sous-catégorie ServiceNow.
-                                </FormDescription>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  disabled={subcategoriesDisabled}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Sélectionner ..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {subcategories
+                                      .filter(
+                                        (sb) =>
+                                          sb.category ===
+                                          form.getValues("category")
+                                      )
+                                      .map((subcategory) => (
+                                        <SelectItem
+                                          key={subcategory.id}
+                                          value={subcategory.value}
+                                        >
+                                          <div className="flex items-center space-x-2">
+                                            <subcategory.icon className="w-4 h-4" />
+                                            <span>{subcategory.label}</span>
+                                          </div>
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -341,15 +379,29 @@ export default function StepperSheetCreation() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Type de catégorie</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Issue, Error, Access, ..."
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  Correspond au type de catégorie ServiceNow.
-                                </FormDescription>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Sélectionner ..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {categoryTypes.map((categoryType) => (
+                                      <SelectItem
+                                        key={categoryType.id}
+                                        value={categoryType.value}
+                                      >
+                                        <div className="flex items-center space-x-2">
+                                          <categoryType.icon className="w-4 h-4" />
+                                          <span>{categoryType.label}</span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -407,9 +459,6 @@ export default function StepperSheetCreation() {
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
-                                <FormDescription>
-                                  Criticité à saisir dans ServiceNow.
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -471,9 +520,6 @@ export default function StepperSheetCreation() {
                                     </SelectGroup>
                                   </SelectContent>
                                 </Select>
-                                <FormDescription>
-                                  Groupe à saisir dans ServiceNow.
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}

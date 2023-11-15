@@ -1,3 +1,6 @@
+import { AppRouter } from "@/trpc";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+
 export type sheet = {
   id: string;
   title: string;
@@ -19,3 +22,7 @@ export type sheet = {
 
   userId: string;
 };
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+export type SheetsWithUser = RouterOutput["getSheets"];

@@ -4,14 +4,25 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import { sheet } from "@/types/types";
-import { Building } from "lucide-react";
+import { Building, Download } from "lucide-react";
 import parse from "html-react-parser";
+import Link from "next/link";
+import { categories, categoryTypes, subcategories } from "@/data/sheets";
 
 interface SheetProps {
   sheet: sheet | undefined;
 }
 
 export default function Sheet({ sheet }: SheetProps) {
+  const category = categories.find(
+    (category) => category.value === sheet?.category
+  );
+  const subcategory = subcategories.find(
+    (subcategory) => subcategory.value === sheet?.subcategory
+  );
+  const categoryType = categoryTypes.find(
+    (categoryType) => categoryType.value === sheet?.categoryType
+  );
   return (
     <div className="py-4">
       <div className="border border-slate-100 px-4 py-6 rounded-lg">
@@ -67,7 +78,7 @@ export default function Sheet({ sheet }: SheetProps) {
                   Catégorie
                 </h5>
                 <p className="text-sm text-muted-foreground">
-                  {sheet?.category}
+                  {category?.label}
                 </p>
               </div>
               <div>
@@ -75,7 +86,7 @@ export default function Sheet({ sheet }: SheetProps) {
                   Sous-catégorie
                 </h5>
                 <p className="text-sm text-muted-foreground">
-                  {sheet?.subcategory}
+                  {subcategory?.label}
                 </p>
               </div>
               <div>
@@ -83,7 +94,7 @@ export default function Sheet({ sheet }: SheetProps) {
                   Type de catégorie
                 </h5>
                 <p className="text-sm text-muted-foreground">
-                  {sheet?.categoryType}
+                  {categoryType?.label}
                 </p>
               </div>
               <div>
@@ -119,6 +130,85 @@ export default function Sheet({ sheet }: SheetProps) {
           <div className="flex flex-col space-y-4">
             <div>
               <h3 className="text-lg font-semibold tracking-tight">
+                Pièces-jointes
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Liste des pièces-jointes rattachées.
+              </p>
+            </div>
+            <Separator />
+            <div className="grid md:grid-cols-4 md:gap-4">
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="w-fit flex items-center border-2 border-muted space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                  <Download className="mt-px h-5 w-5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Creation_du_compte_AX.pdf
+                    </p>
+                    <p className="text-sm text-muted-foreground">5 mo</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold tracking-tight">
                 Description
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -127,18 +217,6 @@ export default function Sheet({ sheet }: SheetProps) {
             </div>
             <Separator />
             <div className="text-sm">{parse(`${sheet?.description}`)}</div>
-          </div>
-          <div className="flex flex-col space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold tracking-tight">
-                Pièces-jointes
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Liste des pièces-jointes rattachées.
-              </p>
-            </div>
-            <Separator />
-            <div className="text-sm">Files</div>
           </div>
         </div>
       </div>
