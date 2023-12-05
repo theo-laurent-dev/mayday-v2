@@ -15,8 +15,8 @@ export const types = [
     label: "Procédure",
   },
   {
-    value: "information",
-    label: "Information",
+    value: "informative",
+    label: "Informatif",
   },
   {
     value: "maintenance",
