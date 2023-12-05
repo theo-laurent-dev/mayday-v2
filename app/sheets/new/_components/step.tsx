@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Step, StepConfig, Steps } from "@/components/ui/stepper";
 import { useStepper } from "@/components/ui/use-stepper";
@@ -55,7 +53,13 @@ const steps = [
   { label: "Etape 5", description: "Autres" },
 ] satisfies StepConfig[];
 
-export default function StepperSheetCreation() {
+interface StepperSheetCreationProps {
+  setTitle: (title: string) => void;
+}
+
+export default function StepperSheetCreation({
+  setTitle,
+}: StepperSheetCreationProps) {
   const [id, setId] = useState("");
   const [subcategoriesDisabled, setSubcategoriesDisabled] =
     useState<boolean>(true);
@@ -99,6 +103,7 @@ export default function StepperSheetCreation() {
           title: "Fiche créée",
         });
         setId(data.id);
+        setTitle(data.title);
         nextStep();
       },
     }

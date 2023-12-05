@@ -62,26 +62,12 @@ model User {
 
   account Account[]
   session Session[]
-  Article Article[]
   Sheet   Sheet[]
-}
-
-model Article {
-  id          String  @id @default(uuid())
-  title       String
-  description String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  @@index([userId])
 }
 
 model Sheet {
   id               String   @id @default(uuid())
+  shortId          String?
   title            String
   shortDescription String?
   description      String?  @db.Text

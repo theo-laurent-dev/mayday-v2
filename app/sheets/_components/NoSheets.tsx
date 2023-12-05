@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 import { buttonVariants } from "@/components/ui/button";
 
-import { Frown, Link } from "lucide-react";
+import { Frown, PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function NoSheets() {
   return (
@@ -18,6 +19,7 @@ export default function NoSheets() {
           href={`/sheets/new`}
           className={cn(buttonVariants({ variant: "default" }), "w-full")}
         >
+          <PlusCircle className="w-5 h-5 mr-2" />
           Ajouter une fiche
         </Link>
       </div>

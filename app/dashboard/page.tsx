@@ -2,12 +2,12 @@
 
 import Kpi from "@/app/dashboard/_components/kpi";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
 import Link from "next/link";
 
 export default function Dashboard() {
-  const { data, isLoading } = trpc.getArticles.useQuery();
+  const { data: userUnpublishedSheets, isLoading } =
+    trpc.getUnpublishedUserSheets.useQuery();
 
   return (
     <div className="py-4 space-y-8">
@@ -17,7 +17,7 @@ export default function Dashboard() {
           <Button>Nouvelle fiche</Button>
         </Link>
       </div>
-      <Kpi />
+      <Kpi userUnpublishedSheets={userUnpublishedSheets} />
     </div>
   );
 }
