@@ -50,7 +50,7 @@ const UserNav = () => {
           <DropdownMenuItem>
             <Link href={"/sheets"} className="flex items-center">
               <GanttChart className="w-5 h-5 mr-2 text-gray-500" />
-              Procédures
+              Fiches
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

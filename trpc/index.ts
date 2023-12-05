@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
+import { SheetFormSchema } from "@/types/forms";
 
 export const appRouter = router({
   register: publicProcedure
@@ -45,94 +46,75 @@ export const appRouter = router({
 
       return user;
     }),
-  getArticles: privateProcedure.query(async ({ ctx }) => {
-    return await db.article.findMany();
+  getCurrentUser: publicProcedure.query(async ({ ctx }) => {
+    const user = await getCurrentUser();
+
+    return user;
   }),
-  getArticle: privateProcedure
+  getSheets: privateProcedure.query(async ({ ctx }) => {
+    return await db.sheet.findMany({
+      where: {
+        published: true,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }),
+  getUnpublishedUserSheets: privateProcedure.query(async ({ ctx }) => {
+    const user = await getCurrentUser();
+    return await db.sheet.findMany({
+      where: {
+        published: false,
+        userId: user?.id,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }),
+  getSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const article = await db.article.findFirstOrThrow({
+      const sheet = await db.sheet.findFirstOrThrow({
         where: {
           id: input.id,
         },
+        include: {
+          user: true,
+        },
       });
-      if (!article) throw new TRPCError({ code: "NOT_FOUND" });
-      return article;
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+      return sheet;
     }),
-  addArticle: privateProcedure
-    .input(z.object({ title: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
-
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
-
-      const article = await db.article.create({
-        data: {
-          title: input.title,
-          userId: user.id,
-        },
-      });
-
-      return article;
-    }),
-  updateArticle: privateProcedure
-    .input(
-      z.object({ id: z.string(), title: z.string(), description: z.string() })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
-
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
-
-      const article = await db.article.findUniqueOrThrow({
-        where: {
-          id: input.id,
-          userId: user.id,
-        },
-      });
-
-      if (!article) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const updatedArticle = await db.article.update({
-        where: {
-          id: input.id,
-          userId: user.id,
-        },
-        data: {
-          title: input.title,
-          description: input.description,
-        },
-      });
-
-      return updatedArticle;
-    }),
-  deleteArticle: privateProcedure
+  publishSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await getCurrentUser();
 
       if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-      const article = await db.article.findFirst({
+      const sheet = await db.sheet.findUniqueOrThrow({
         where: {
           id: input.id,
           userId: user.id,
         },
       });
 
-      if (!article) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
 
-      await db.article.delete({
+      const updatedSheet = await db.sheet.update({
         where: {
           id: input.id,
+          userId: user.id,
+        },
+        data: {
+          published: true,
         },
       });
 
-      return article;
+      return updatedSheet;
     }),
-  getSheets: privateProcedure.query(async ({ ctx }) => {
-    return await db.sheet.findMany();
-  }),
   addSheet: privateProcedure
     .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -140,9 +122,12 @@ export const appRouter = router({
 
       if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
 
+      const sheetCount = (await db.sheet.findMany()).length;
+
       const sheet = await db.sheet.create({
         data: {
           title: input.title,
+          shortId: `F-${sheetCount + 1}`,
           userId: user.id,
         },
       });
@@ -150,13 +135,7 @@ export const appRouter = router({
       return sheet;
     }),
   updateSheet: privateProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string().optional(),
-      })
-    )
+    .input(SheetFormSchema)
     .mutation(async ({ ctx, input }) => {
       const user = await getCurrentUser();
 
@@ -178,11 +157,44 @@ export const appRouter = router({
         },
         data: {
           title: input.title,
+          shortDescription: input.shortDescription,
           description: input.description,
+          category: input.category,
+          subcategory: input.subcategory,
+          categoryType: input.categoryType,
+          assignmentGroup: input.assignmentGroup,
+          criticity: input.criticity,
+          type: input.type,
+          published: input.published,
+          company: input.company,
         },
       });
 
       return updatedSheet;
+    }),
+  deleteSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await getCurrentUser();
+
+      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findFirst({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.sheet.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return sheet;
     }),
 });
 

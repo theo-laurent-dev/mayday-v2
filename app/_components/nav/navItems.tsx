@@ -25,22 +25,13 @@ const NavItems = ({ className, session }: MainNavInterface) => {
         Dashboard
       </Link>
       <Link
-        href="/articles"
-        className={cn(
-          "text-sm font-medium text-muted-foreground transition-colors hover:text-primary",
-          path === "/articles" && "text-black"
-        )}
-      >
-        Articles
-      </Link>
-      <Link
         href="/sheets"
         className={cn(
           "text-sm font-medium text-muted-foreground transition-colors hover:text-primary",
           path === "/sheets" && "text-black"
         )}
       >
-        Procédures
+        Fiches
       </Link>
     </nav>
   );
