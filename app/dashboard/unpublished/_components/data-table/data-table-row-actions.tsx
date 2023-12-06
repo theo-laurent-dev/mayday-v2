@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { companies } from "@/app/dashboard/unpublished/_components/data";
+import { companies } from "@/data/data-table/unpublished-sheets-data-table";
 import { SheetWithUserSchema } from "@/types/forms";
 import { BadgeCheck, Building2, PenSquare, Trash2 } from "lucide-react";
 import Link from "next/link";

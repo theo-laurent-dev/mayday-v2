@@ -5,7 +5,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { types, companies, criticities } from "../data";
+import {
+  types,
+  companies,
+  criticities,
+} from "../../../../../data/data-table/unpublished-sheets-data-table";
 import { DataTableColumnHeader } from "@/app/dashboard/unpublished/_components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/app/dashboard/unpublished/_components/data-table/data-table-row-actions";
 import { SheetWithUser } from "@/types/types";

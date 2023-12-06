@@ -12,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { columnsLabels } from "@/app/dashboard/unpublished/_components/data";
+import { columnsLabels } from "@/data/data-table/unpublished-sheets-data-table";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
