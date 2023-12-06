@@ -35,8 +35,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Environment Variables
 
-`DATABASE_URL="mysql://user:password@host:port/database"`
-`NEXTAUTH_SECRET=123456789abcdefghijklmnopqrstuvwxyz`
+- `DATABASE_URL="mysql://user:password@host:port/database"`
+- `NEXTAUTH_SECRET=123456789abcdefghijklmnopqrstuvwxyz`
+- `NEXT_PUBLIC_TINYMCE_API_KEY=tvro04mz48z6wrzc4ek5xa4akpxfcq4qge4c39td4w5j96rm`
 
 ## Start
 
