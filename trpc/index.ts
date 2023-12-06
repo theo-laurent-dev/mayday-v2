@@ -115,6 +115,34 @@ export const appRouter = router({
 
       return updatedSheet;
     }),
+  reportSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await getCurrentUser();
+
+      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findUniqueOrThrow({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedSheet = await db.sheet.update({
+        where: {
+          id: input.id,
+          userId: user.id,
+        },
+        data: {
+          obsolete: true,
+        },
+      });
+
+      return updatedSheet;
+    }),
   addSheet: privateProcedure
     .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -196,6 +224,9 @@ export const appRouter = router({
 
       return sheet;
     }),
+  getUsers: privateProcedure.query(async ({ ctx }) => {
+    return await db.user.findMany();
+  }),
 });
 
 export type AppRouter = typeof appRouter;

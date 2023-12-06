@@ -8,19 +8,23 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
+import { Building, Building2, GanttChart, Info, Wrench } from "lucide-react";
 
 export const types = [
   {
     value: "procedure",
     label: "Procédure",
+    icon: GanttChart,
   },
   {
     value: "informative",
     label: "Informatif",
+    icon: Info,
   },
   {
     value: "maintenance",
     label: "Maintenance",
+    icon: Wrench,
   },
 ];
 
@@ -28,27 +32,27 @@ export const companies = [
   {
     value: "all",
     label: "Toutes",
-    icon: QuestionMarkCircledIcon,
+    icon: Building2,
   },
   {
     value: "nicoll",
     label: "Nicoll",
-    icon: QuestionMarkCircledIcon,
+    icon: Building,
   },
   {
     value: "girpi",
     label: "Girpi",
-    icon: QuestionMarkCircledIcon,
+    icon: Building,
   },
   {
     value: "aliaxis",
     label: "Aliaxis",
-    icon: QuestionMarkCircledIcon,
+    icon: Building,
   },
   {
     value: "aui",
     label: "AUI",
-    icon: QuestionMarkCircledIcon,
+    icon: Building,
   },
 ];
 
@@ -64,6 +68,45 @@ export const columnsLabels = [
   {
     value: "criticity",
     label: "Criticité",
+  },
+  {
+    value: "type",
+    label: "Type",
+  },
+  {
+    value: "userId",
+    label: "Utilisateur",
+  },
+  {
+    value: "category",
+    label: "Catégorie",
+  },
+  {
+    value: "subcategory",
+    label: "Sous-catégorie",
+  },
+];
+
+export const criticities = [
+  {
+    label: "Basse",
+    value: "low",
+    icon: ArrowDownIcon,
+  },
+  {
+    label: "Moyenne",
+    value: "medium",
+    icon: ArrowRightIcon,
+  },
+  {
+    label: "Haute",
+    value: "high",
+    icon: ArrowUpIcon,
+  },
+  {
+    label: "Critique",
+    value: "critical",
+    icon: ArrowUpIcon,
   },
 ];
 
@@ -109,39 +152,3 @@ export const columnsLabels = [
 //     icon: CrossCircledIcon,
 //   },
 // ];
-
-// export const priorities = [
-//   {
-//     label: "Basse",
-//     value: "low",
-//     icon: ArrowDownIcon,
-//   },
-//   {
-//     label: "Moyenne",
-//     value: "medium",
-//     icon: ArrowRightIcon,
-//   },
-//   {
-//     label: "Haute",
-//     value: "high",
-//     icon: ArrowUpIcon,
-//   },
-// ];
-
-export const criticities = [
-  {
-    label: "Basse",
-    value: "low",
-    icon: ArrowDownIcon,
-  },
-  {
-    label: "Moyenne",
-    value: "medium",
-    icon: ArrowRightIcon,
-  },
-  {
-    label: "Haute",
-    value: "high",
-    icon: ArrowUpIcon,
-  },
-];

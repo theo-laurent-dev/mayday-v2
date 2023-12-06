@@ -61,6 +61,7 @@ export const SheetFormSchema = z.object({
       message: "Society must be at least 2 characters.",
     })
     .optional(),
+  obsolete: z.boolean().default(false).optional(),
 });
 
 export const SheetWithUserSchema = z.object({
@@ -124,6 +125,7 @@ export const SheetWithUserSchema = z.object({
       message: "Society must be at least 2 characters.",
     })
     .nullable(),
+  obsolete: z.boolean().default(false).nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
   user: z.object({

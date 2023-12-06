@@ -104,7 +104,6 @@ export function DataTableRowActions<TData>({
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          {" "}
           <div className="w-full">
             <Link
               href={`/sheet/${sheet.id}`}

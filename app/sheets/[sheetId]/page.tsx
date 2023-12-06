@@ -28,7 +28,11 @@ export default function SheetIdPage({ params }: SheetIdPageProps) {
         <Sheet sheet={sheet} />
       </div>
       <div className="w-1/6">
-        <Actions sheetId={params.sheetId} sheetUserId={sheet?.userId} />
+        <Actions
+          sheetId={params.sheetId}
+          sheetUserId={sheet?.userId}
+          obsolete={sheet?.obsolete || false}
+        />
       </div>
     </div>
   );

@@ -81,6 +81,7 @@ model Sheet {
   businessApp      String?
   published        Boolean? @default(false)
   company          String?
+  obsolete         Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

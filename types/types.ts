@@ -19,6 +19,7 @@ export type sheet = {
   businessApp: string | null;
   published: boolean | null;
   company: string | null;
+  obsolete: boolean | null;
 
   createdAt: string;
   updatedAt: string;

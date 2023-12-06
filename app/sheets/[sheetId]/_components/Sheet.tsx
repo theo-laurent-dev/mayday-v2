@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import { SheetWithUser } from "@/types/types";
-import { AlertCircle, Building, Download } from "lucide-react";
+import { AlertCircle, AlertTriangle, Building, Download } from "lucide-react";
 import parse from "html-react-parser";
 import Link from "next/link";
 import { categories, categoryTypes, subcategories } from "@/data/sheets";
@@ -34,6 +34,17 @@ export default function Sheet({ sheet }: SheetProps) {
           <AlertTitle>Information</AlertTitle>
           <AlertDescription>
             {"Cette fiche n'est pas encore publiée !"}
+          </AlertDescription>
+        </Alert>
+      )}
+      {sheet?.obsolete && (
+        <Alert variant="warning" className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Attention</AlertTitle>
+          <AlertDescription>
+            {
+              "Cette fiche a été signalée obsolète ! Les informations peuvent ne plus être à jour."
+            }
           </AlertDescription>
         </Alert>
       )}
