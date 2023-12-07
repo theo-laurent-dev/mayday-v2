@@ -4,34 +4,11 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
-import { SheetFormSchema } from "@/types/forms";
+import { RegisterFormSchema, SheetFormSchema } from "@/types/forms";
 
 export const appRouter = router({
   register: publicProcedure
-    .input(
-      z.object({
-        name: z
-          .string()
-          .min(2, {
-            message: "Le nom doit faire au moins 2 caractères.",
-          })
-          .max(30, "Le nom ne doit pas excéder 30 caractères."),
-        email: z
-          .string()
-          .min(2, {
-            message: "L'email doit faire au moins 2 caractères.",
-          })
-          .email("Ce n'est pas un mail valide."),
-        password: z
-          .string()
-          .min(6, {
-            message: "Le mot de passe doit faire au minimum 6 caractères.",
-          })
-          .max(30, {
-            message: "Le mot de passe ne doit pas excéder 30 caractères.",
-          }),
-      })
-    )
+    .input(RegisterFormSchema)
     .mutation(async ({ ctx, input }) => {
       const { name, email, password } = input;
 
@@ -62,11 +39,14 @@ export const appRouter = router({
     });
   }),
   getUnpublishedUserSheets: privateProcedure.query(async ({ ctx }) => {
-    const user = await getCurrentUser();
+    const userId = ctx.userId;
+
+    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
     return await db.sheet.findMany({
       where: {
         published: false,
-        userId: user?.id,
+        userId,
       },
       include: {
         user: true,
@@ -90,14 +70,14 @@ export const appRouter = router({
   publishSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
+      const userId = ctx.userId;
 
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const sheet = await db.sheet.findUniqueOrThrow({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
       });
 
@@ -106,7 +86,7 @@ export const appRouter = router({
       const updatedSheet = await db.sheet.update({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
         data: {
           published: true,
@@ -118,14 +98,14 @@ export const appRouter = router({
   reportSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
+      const userId = ctx.userId;
 
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const sheet = await db.sheet.findUniqueOrThrow({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
       });
 
@@ -134,7 +114,7 @@ export const appRouter = router({
       const updatedSheet = await db.sheet.update({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
         data: {
           obsolete: true,
@@ -146,9 +126,9 @@ export const appRouter = router({
   addSheet: privateProcedure
     .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
+      const userId = ctx.userId;
 
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const sheetCount = (await db.sheet.findMany()).length;
 
@@ -156,7 +136,7 @@ export const appRouter = router({
         data: {
           title: input.title,
           shortId: `F-${sheetCount + 1}`,
-          userId: user.id,
+          userId,
         },
       });
 
@@ -165,14 +145,14 @@ export const appRouter = router({
   updateSheet: privateProcedure
     .input(SheetFormSchema)
     .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
+      const userId = ctx.userId;
 
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const sheet = await db.sheet.findUniqueOrThrow({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
       });
 
@@ -181,7 +161,7 @@ export const appRouter = router({
       const updatedSheet = await db.sheet.update({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
         data: {
           title: input.title,
@@ -203,14 +183,14 @@ export const appRouter = router({
   deleteSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const user = await getCurrentUser();
+      const userId = ctx.userId;
 
-      if (!user) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const sheet = await db.sheet.findFirst({
         where: {
           id: input.id,
-          userId: user.id,
+          userId,
         },
       });
 

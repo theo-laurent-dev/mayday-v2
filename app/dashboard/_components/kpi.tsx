@@ -1,12 +1,12 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserUnpublishedSheetsWithUser } from "@/types/types";
+import { SheetsWithUser } from "@/types/types";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
 interface KpiProps {
-  userUnpublishedSheets: UserUnpublishedSheetsWithUser | undefined;
+  userUnpublishedSheets: SheetsWithUser | undefined;
 }
 
 export default function Kpi({ userUnpublishedSheets }: KpiProps) {

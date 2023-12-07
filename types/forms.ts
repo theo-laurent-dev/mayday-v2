@@ -1,5 +1,28 @@
 import { z } from "zod";
 
+export const RegisterFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: "Le nom doit faire au moins 2 caractères.",
+    })
+    .max(30, "Le nom ne doit pas excéder 30 caractères."),
+  email: z
+    .string()
+    .min(2, {
+      message: "L'email doit faire au moins 2 caractères.",
+    })
+    .email("Ce n'est pas un mail valide."),
+  password: z
+    .string()
+    .min(6, {
+      message: "Le mot de passe doit faire au minimum 6 caractères.",
+    })
+    .max(30, {
+      message: "Le mot de passe ne doit pas excéder 30 caractères.",
+    }),
+});
+
 export const SheetFormSchema = z.object({
   id: z.string().optional(),
   shortId: z.string().nullable().optional(),
@@ -62,6 +85,17 @@ export const SheetFormSchema = z.object({
     })
     .optional(),
   obsolete: z.boolean().default(false).optional(),
+});
+
+export const UserSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  email: z.string().email(),
+  emailVerified: z.string().nullable(),
+  image: z.string().nullable(),
+  hashedPassword: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const SheetWithUserSchema = z.object({
@@ -128,14 +162,5 @@ export const SheetWithUserSchema = z.object({
   obsolete: z.boolean().default(false).nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  user: z.object({
-    id: z.string().optional(),
-    name: z.string(),
-    email: z.string().email(),
-    emailVerified: z.string().nullable(),
-    image: z.string().nullable(),
-    hashedPassword: z.string().optional(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
-  }),
+  user: UserSchema,
 });
