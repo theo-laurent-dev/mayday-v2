@@ -9,7 +9,7 @@ import {
   types,
   companies,
   criticities,
-} from "../../../../../data/data-table/unpublished-sheets-data-table";
+} from "../../../../../data/data-table/data-table-constantes";
 import { DataTableColumnHeader } from "@/app/dashboard/unpublished/_components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/app/dashboard/unpublished/_components/data-table/data-table-row-actions";
 import { SheetWithUser } from "@/types/types";

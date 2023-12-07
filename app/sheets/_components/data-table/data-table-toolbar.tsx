@@ -12,7 +12,7 @@ import {
   companies,
   criticities,
   types,
-} from "@/data/data-table/unpublished-sheets-data-table";
+} from "@/data/data-table/data-table-constantes";
 import { useEffect, useState } from "react";
 import { User } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";

@@ -11,7 +11,7 @@ import { DataTableFacetedFilter } from "@/app/dashboard/unpublished/_components/
 import {
   companies,
   criticities,
-} from "@/data/data-table/unpublished-sheets-data-table";
+} from "@/data/data-table/data-table-constantes";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
