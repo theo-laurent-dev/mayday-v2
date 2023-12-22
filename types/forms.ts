@@ -88,11 +88,12 @@ export const SheetFormSchema = z.object({
 });
 
 export const UserSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   name: z.string(),
   email: z.string().email(),
   emailVerified: z.string().nullable(),
   image: z.string().nullable(),
+  isActive: z.boolean(),
   hashedPassword: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -163,4 +164,41 @@ export const SheetWithUserSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   user: UserSchema,
+});
+
+export const UserWithRoleSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  emailVerified: z.string().nullable(),
+  image: z.string().nullable(),
+  isActive: z.boolean(),
+  hashedPassword: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  role: z.object({
+    id: z.string(),
+    name: z.string(),
+    label: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+  }),
+});
+
+export const RoleSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  label: z.string(),
+
+  applicationId: z.string(),
+
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export const ProfileFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  label: z.string(),
+  permissions: z.string().optional(),
 });

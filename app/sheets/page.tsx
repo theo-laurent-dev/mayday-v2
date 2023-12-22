@@ -2,32 +2,35 @@
 
 import { trpc } from "@/app/_trpc/client";
 
-import { DataTable } from "./_components/data-table/data-table";
+import { DataTable } from "@/app/sheets/_components/data-table/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { columns } from "./_components/data-table/columns";
+import { columns } from "@/app/sheets/_components/data-table/columns";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 
 export default function SheetsPage() {
-  const { data: sheets, isLoading } = trpc.getSheets.useQuery();
+  const { data: sheets, isLoading: sheetsLoading } = trpc.getSheets.useQuery();
 
-  if (isLoading) {
+  if (sheetsLoading) {
     return <SheetsPage.Skeleton />;
   }
 
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Fiches</h2>
-          <p className="text-muted-foreground">Liste des fiches</p>
+    <HasPermissionShield required="sheets.view">
+      <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <div className="flex items-center justify-between space-y-2">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Fiches</h2>
+            <p className="text-muted-foreground">Liste des fiches</p>
+          </div>
+          <Link href="/sheets/new" className={buttonVariants()}>
+            Nouvelle fiche
+          </Link>
         </div>
-        <Link href="/sheets/new" className={buttonVariants()}>
-          Nouvelle fiche
-        </Link>
+        <DataTable data={sheets || []} columns={columns} />
       </div>
-      <DataTable data={sheets || []} columns={columns} />
-    </div>
+    </HasPermissionShield>
   );
 }
 

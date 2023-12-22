@@ -71,7 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
 
     signIn("credentials", {
       ...data,
-      redirect: false,
+      redirect: true,
     }).then((callback) => {
       if (callback?.ok) {
         setIsLoading(false);

@@ -4,7 +4,11 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
-import { RegisterFormSchema, SheetFormSchema } from "@/types/forms";
+import {
+  ProfileFormSchema,
+  RegisterFormSchema,
+  SheetFormSchema,
+} from "@/types/forms";
 
 export const appRouter = router({
   register: publicProcedure
@@ -13,11 +17,24 @@ export const appRouter = router({
       const { name, email, password } = input;
 
       const hashedPassword = await bcrypt.hash(password, 12);
+
       const user = await db.user.create({
         data: {
           name,
           email,
           hashedPassword,
+          profile: {
+            connectOrCreate: {
+              where: {
+                name: "default",
+              },
+              create: {
+                name: "default",
+                label: "Défaut",
+                permissions: `"['dashboard.view']"`,
+              },
+            },
+          },
         },
       });
 
@@ -205,8 +222,147 @@ export const appRouter = router({
       return sheet;
     }),
   getUsers: privateProcedure.query(async ({ ctx }) => {
-    return await db.user.findMany();
+    return await db.user.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        profile: true,
+      },
+    });
   }),
+  getUser: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await db.user.findFirstOrThrow({
+        where: {
+          id: input.id,
+        },
+        include: {
+          profile: true,
+        },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+      return user;
+    }),
+  getUserPermissions: privateProcedure.query(async ({ ctx, input }) => {
+    const userId = ctx.userId;
+    const user = await db.user.findFirstOrThrow({
+      where: {
+        id: userId,
+      },
+      include: {
+        profile: {
+          include: {
+            roles: {
+              include: {
+                application: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    console.log(user);
+    if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+    return user;
+  }),
+  switchStatusUser: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await db.user.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedUser = await db.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isActive: !user.isActive,
+        },
+      });
+
+      return updatedUser;
+    }),
+  getRoles: privateProcedure.query(async ({ ctx }) => {
+    return await db.role.findMany({
+      include: {
+        application: true,
+      },
+    });
+  }),
+  getProfiles: privateProcedure.query(async ({ ctx }) => {
+    return await db.profile.findMany({
+      include: {
+        roles: true,
+      },
+    });
+  }),
+  getProfile: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await db.profile.findFirstOrThrow({
+        where: {
+          id: input.id,
+        },
+        // select: {
+        //   roles: {
+        //     select: {
+        //       id: true,
+        //     },
+        //   },
+        // },
+        include: {
+          roles: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      const applications = await db.application.findMany({
+        include: {
+          roles: true,
+        },
+      });
+
+      if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
+      return { profile, applications };
+    }),
+  updateProfile: privateProcedure
+    .input(ProfileFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const profile = await db.profile.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedProfile = await db.profile.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          label: input.label,
+          permissions: input.permissions,
+        },
+      });
+
+      return updatedProfile;
+    }),
 });
 
 export type AppRouter = typeof appRouter;

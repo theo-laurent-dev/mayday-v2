@@ -85,6 +85,26 @@ export const columnsLabels = [
     value: "subcategory",
     label: "Sous-catégorie",
   },
+  {
+    value: "name",
+    label: "Nom",
+  },
+  {
+    value: "label",
+    label: "Label",
+  },
+  {
+    value: "email",
+    label: "Email",
+  },
+  {
+    value: "isActive",
+    label: "Actif",
+  },
+  {
+    value: "roleId",
+    label: "Role",
+  },
 ];
 
 export const criticities = [
@@ -125,30 +145,15 @@ export const criticities = [
 //   },
 // ];
 
-// export const statuses = [
-//   {
-//     value: "backlog",
-//     label: "Backlog",
-//     icon: QuestionMarkCircledIcon,
-//   },
-//   {
-//     value: "todo",
-//     label: "Todo",
-//     icon: CircleIcon,
-//   },
-//   {
-//     value: "in progress",
-//     label: "In Progress",
-//     icon: StopwatchIcon,
-//   },
-//   {
-//     value: "done",
-//     label: "Done",
-//     icon: CheckCircledIcon,
-//   },
-//   {
-//     value: "canceled",
-//     label: "Canceled",
-//     icon: CrossCircledIcon,
-//   },
-// ];
+export const userStatuses = [
+  {
+    value: "true",
+    label: "Actif",
+    icon: CheckCircledIcon,
+  },
+  {
+    value: "false",
+    label: "Inactif",
+    icon: CrossCircledIcon,
+  },
+];

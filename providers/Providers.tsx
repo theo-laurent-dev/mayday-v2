@@ -8,6 +8,7 @@ import { PropsWithChildren, useState } from "react";
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient());
+  const token = "";
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

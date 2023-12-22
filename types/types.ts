@@ -25,7 +25,27 @@ export type sheet = {
   userId: string;
 };
 
+export type user = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: string | null;
+  image: string | null;
+  isActive: boolean;
+  hashedPassword: string;
+
+  profileId: string;
+
+  createdAt: string;
+  updatedAt: string;
+};
+
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type SheetsWithUser = RouterOutput["getSheets"];
 export type SheetWithUser = RouterOutput["getSheet"];
+
+export type UsersWithRole = RouterOutput["getUsers"];
+export type UserWithRole = RouterOutput["getUser"];
+
+export type ProfileWithRole = RouterOutput["getProfiles"];

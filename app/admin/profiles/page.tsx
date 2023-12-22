@@ -1,43 +1,51 @@
 "use client";
 
-import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { trpc } from "@/app/_trpc/client";
-import { columns } from "@/app/dashboard/unpublished/_components/data-table/columns";
-import { DataTable } from "@/app/dashboard/unpublished/_components/data-table/data-table";
+import { DataTable } from "@/app/admin/profiles/_components/data-table/data-table";
+import { buttonVariants } from "@/components/ui/button";
+import { columns } from "@/app/admin/profiles/_components/data-table/columns";
+import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 
-export default function Unpublished() {
-  const { data: unpublishedUserSheets, isLoading } =
-    trpc.getUnpublishedUserSheets.useQuery();
+export default function ProfilesPage() {
+  const { data: profiles, isLoading: profilesLoading } =
+    trpc.getProfiles.useQuery();
 
-  if (isLoading) {
-    return <Unpublished.Skeleton />;
+  if (profilesLoading) {
+    return <ProfilesPage.Skeleton />;
   }
 
   return (
-    <HasPermissionShield required="unpublished.view">
+    <HasPermissionShield required="profiles.view">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Brouillons</h2>
-            <p className="text-muted-foreground">
-              Liste des fiches en brouillons (non publiées)
-            </p>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Administration des profils
+            </h2>
+            <p className="text-muted-foreground">Liste des profils</p>
           </div>
+          <Link href="/admin/profiles/new" className={buttonVariants()}>
+            Nouveau profil
+          </Link>
         </div>
-        <DataTable data={unpublishedUserSheets || []} columns={columns} />
+        <DataTable data={profiles || []} columns={columns} />
       </div>
     </HasPermissionShield>
   );
 }
 
-Unpublished.Skeleton = function UnpublishedSkeleton() {
+ProfilesPage.Skeleton = function ProfilesSkeleton() {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
         <div>
           <Skeleton className="h-8 w-[200px]" />
           <Skeleton className="h-4 w-[300px] mt-1" />
+        </div>
+        <div>
+          <Skeleton className="h-10 w-[150px]" />
         </div>
       </div>
       <div className="flex justify-between items-center">

@@ -20,7 +20,7 @@ export default function Kpi({ userUnpublishedSheets }: KpiProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {userUnpublishedSheets?.length}
+              {userUnpublishedSheets?.length || "0"}
             </div>
             <p className="text-xs text-muted-foreground">Fiches non publiées</p>
           </CardContent>

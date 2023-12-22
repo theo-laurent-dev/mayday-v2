@@ -57,12 +57,18 @@ model User {
   emailVerified  DateTime?
   image          String?
   hashedPassword String
+  isActive       Boolean   @default(true)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   account Account[]
   session Session[]
   Sheet   Sheet[]
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  @@index([profileId])
 }
 
 model Sheet {
@@ -91,3 +97,82 @@ model Sheet {
 
   @@index([userId])
 }
+
+model Profile {
+  id          String @id @default(uuid())
+  name        String @unique
+  label       String
+  permissions Json   @db.Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  roles Role[]
+}
+
+model Role {
+  id    String @id @default(uuid())
+  name  String
+  label String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  application   Application @relation(fields: [applicationId], references: [id])
+  applicationId String
+  profile       Profile     @relation(fields: [profileId], references: [id])
+  profileId     String
+
+  @@index([applicationId])
+  @@index([profileId])
+}
+
+model Application {
+  id    String @id @default(uuid())
+  name  String @unique
+  label String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roles Role[]
+}
+
+// model UserGroup {
+//   id    String @id @default(uuid())
+//   name  String @unique
+//   label String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   users User[]
+//   roles Role[]
+// }
+
+// model Role {
+//   id    String @id @default(uuid())
+//   name  String @unique
+//   label String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   groups     UserGroup[]
+//   permission Permission[]
+// }
+
+// model Permission {
+//   id    String @id @default(uuid())
+//   name  String @unique
+//   label String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   role   Role   @relation(fields: [roleId], references: [id])
+//   roleId String
+
+//   @@index([roleId])
+// }
