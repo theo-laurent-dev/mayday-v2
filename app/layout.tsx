@@ -7,6 +7,10 @@ import NavItems from "@/app/_components/nav/navItems";
 import UserNav from "@/app/_components/nav/usernav";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
 import Providers from "@/providers/Providers";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { JsonArray } from "@prisma/client/runtime/library";
+import NavAdminItems from "./_components/nav/nav-admin-item";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,8 +37,16 @@ export default async function RootLayout({
                   <div className="border-b">
                     <div className="flex h-16 items-center px-4">
                       <h1 className="font-bold text-xl">Mayday</h1>
-                      <NavItems session={session} className="mx-6" />
+                      <NavItems className="mx-6" />
                       <div className="ml-auto flex items-center space-x-4">
+                        {((session &&
+                          session.profile.permissions &&
+                          Array.from(
+                            session.profile.permissions as JsonArray
+                          ).includes("admin.*")) ||
+                          Array.from(
+                            session.profile.permissions as JsonArray
+                          ).includes("admin.view")) && <NavAdminItems />}
                         <UserNav />
                       </div>
                     </div>

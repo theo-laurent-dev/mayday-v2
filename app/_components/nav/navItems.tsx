@@ -7,10 +7,9 @@ import { usePathname } from "next/navigation";
 
 interface MainNavInterface {
   className: string;
-  session: object;
 }
 
-const NavItems = ({ className, session }: MainNavInterface) => {
+const NavItems = ({ className }: MainNavInterface) => {
   const path = usePathname();
 
   return (

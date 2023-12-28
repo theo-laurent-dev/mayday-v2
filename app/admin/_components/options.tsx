@@ -9,25 +9,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Cloud,
   GanttChart,
-  Github,
   Group,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
   PlusCircle,
   Settings,
-  UserPlus,
+  Tag,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -39,7 +31,7 @@ export default function Options() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Options</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel>Administration</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -63,6 +55,35 @@ export default function Options() {
                   <DropdownMenuItem>
                     <Link
                       href={`/admin/users/new`}
+                      className="flex items-center space-x-2"
+                    >
+                      <PlusCircle className="h-4 w-4" />
+                      <span>Créer</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Tag className="mr-2 h-4 w-4" />
+                <span>Profils</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem>
+                    <Link
+                      href={`/admin/profiles`}
+                      className="flex items-center space-x-2 w-full"
+                    >
+                      <GanttChart className="h-4 w-4" />
+                      <span>Liste</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link
+                      href={`/admin/profiles/new`}
                       className="flex items-center space-x-2"
                     >
                       <PlusCircle className="h-4 w-4" />

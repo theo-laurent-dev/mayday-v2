@@ -200,5 +200,6 @@ export const ProfileFormSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   label: z.string(),
-  permissions: z.string().optional(),
+  permissions: z.string().array(),
+  // permissions: z.object({}),
 });

@@ -9,6 +9,7 @@ import {
   RegisterFormSchema,
   SheetFormSchema,
 } from "@/types/forms";
+import { Prisma } from "@prisma/client";
 
 export const appRouter = router({
   register: publicProcedure
@@ -31,7 +32,7 @@ export const appRouter = router({
               create: {
                 name: "default",
                 label: "Défaut",
-                permissions: `"['dashboard.view']"`,
+                permissions: ["dashboard.view"],
               },
             },
           },
@@ -310,13 +311,6 @@ export const appRouter = router({
         where: {
           id: input.id,
         },
-        // select: {
-        //   roles: {
-        //     select: {
-        //       id: true,
-        //     },
-        //   },
-        // },
         include: {
           roles: {
             select: {
@@ -326,13 +320,14 @@ export const appRouter = router({
         },
       });
 
+      if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
+
       const applications = await db.application.findMany({
         include: {
           roles: true,
         },
       });
 
-      if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
       return { profile, applications };
     }),
   updateProfile: privateProcedure
@@ -363,6 +358,13 @@ export const appRouter = router({
 
       return updatedProfile;
     }),
+  getApplications: privateProcedure.query(async ({ ctx }) => {
+    return await db.application.findMany({
+      include: {
+        roles: true,
+      },
+    });
+  }),
 });
 
 export type AppRouter = typeof appRouter;

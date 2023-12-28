@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { GanttChart, LayoutDashboard } from "lucide-react";
+import { GanttChart, LayoutDashboard, Settings } from "lucide-react";
 
 const UserNav = () => {
   const session = useSession();
@@ -42,13 +42,22 @@ const UserNav = () => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href={"/dashboard"} className="flex items-center">
+            <Link href={"/admin"} className="flex items-center w-full">
+              <Settings className="w-5 h-5 mr-2 text-gray-500" />
+              Administration
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Link href={"/dashboard"} className="flex items-center w-full">
               <LayoutDashboard className="w-5 h-5 mr-2 text-gray-500" />
               Dashboard
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href={"/sheets"} className="flex items-center">
+            <Link href={"/sheets"} className="flex items-center w-full">
               <GanttChart className="w-5 h-5 mr-2 text-gray-500" />
               Fiches
             </Link>

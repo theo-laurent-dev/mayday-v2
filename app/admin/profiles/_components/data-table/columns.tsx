@@ -6,10 +6,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { DataTableColumnHeader } from "@/app/admin/profiles/_components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/app/admin/profiles/_components/data-table/data-table-row-actions";
-import { ProfileWithRole } from "@/types/types";
+import { ProfilesWithRole } from "@/types/types";
 import { Badge } from "@/components/ui/badge";
 
-export const columns: ColumnDef<ProfileWithRole>[] = [
+export const columns: ColumnDef<ProfilesWithRole>[] = [
   {
     id: "select",
     header: ({ table }) => (
