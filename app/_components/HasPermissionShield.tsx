@@ -12,12 +12,16 @@ export function HasPermissionShield({
 }: HasPermissionShieldProps) {
   const { data } = useSession();
   const permissions = data?.user?.profile?.permissions;
-  // console.log(permissions);
   const router = useRouter();
 
   if (permissions) {
+    if (
+      permissions.includes(required) ||
+      permissions.includes(`${required.split(".")[0]}.*`)
+    )
+      return <>{children}</>;
+
     if (!permissions.includes(required)) router.push("/not-found");
-    if (permissions.includes(required)) return <>{children}</>;
   }
 
   return <>{null}</>;

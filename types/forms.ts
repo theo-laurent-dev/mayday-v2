@@ -99,6 +99,15 @@ export const UserSchema = z.object({
   updatedAt: z.string(),
 });
 
+export const UserUpdateFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  email: z.string().email(),
+  isActive: z.boolean(),
+
+  profileId: z.string(),
+});
+
 export const SheetWithUserSchema = z.object({
   id: z.string(),
   shortId: z.string().nullable(),
@@ -160,7 +169,7 @@ export const SheetWithUserSchema = z.object({
       message: "Society must be at least 2 characters.",
     })
     .nullable(),
-  obsolete: z.boolean().default(false).nullable(),
+  obsolete: z.boolean().default(false),
   createdAt: z.string(),
   updatedAt: z.string(),
   user: UserSchema,
@@ -201,5 +210,4 @@ export const ProfileFormSchema = z.object({
   name: z.string(),
   label: z.string(),
   permissions: z.string().array(),
-  // permissions: z.object({}),
 });

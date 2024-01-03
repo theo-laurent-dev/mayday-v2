@@ -71,7 +71,7 @@ export function DataTableRowActions<TData>({
               size="item"
               className="space-x-2"
               onClick={() => handleReport(sheet.id)}
-              disabled={reportSheetLoading}
+              disabled={reportSheetLoading || sheet.obsolete}
             >
               <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
             </Button>

@@ -34,6 +34,7 @@ export default function SheetIdPage({ params }: SheetIdPageProps) {
             sheetId={params.sheetId}
             sheetUserId={sheet?.userId}
             obsolete={sheet?.obsolete || false}
+            shortId={sheet?.shortId}
           />
         </div>
       </div>

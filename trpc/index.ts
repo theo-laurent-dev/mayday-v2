@@ -8,8 +8,8 @@ import {
   ProfileFormSchema,
   RegisterFormSchema,
   SheetFormSchema,
+  UserUpdateFormSchema,
 } from "@/types/forms";
-import { Prisma } from "@prisma/client";
 
 export const appRouter = router({
   register: publicProcedure
@@ -245,6 +245,35 @@ export const appRouter = router({
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
       return user;
+    }),
+  updateUser: privateProcedure
+    .input(UserUpdateFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const user = await db.user.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedUser = await db.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          email: input.email,
+          isActive: input.isActive,
+          profileId: input.profileId,
+        },
+      });
+
+      return updatedUser;
     }),
   getUserPermissions: privateProcedure.query(async ({ ctx, input }) => {
     const userId = ctx.userId;

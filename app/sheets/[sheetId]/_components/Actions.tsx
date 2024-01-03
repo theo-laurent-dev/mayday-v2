@@ -13,19 +13,21 @@ interface ActionsPageProps {
   sheetId: string;
   sheetUserId: string | undefined;
   obsolete: boolean | undefined;
+  shortId: string | undefined | null;
 }
 
 export default function Actions({
   sheetId,
   sheetUserId,
   obsolete,
+  shortId,
 }: ActionsPageProps) {
   const { data: currentUser, isLoading } = trpc.getCurrentUser.useQuery();
   const utils = trpc.useContext();
   const { mutate: reportSheet, isLoading: reportSheetLoading } =
     trpc.reportSheet.useMutation({
       onSuccess: () => {
-        utils.getSheets.invalidate();
+        utils.getSheet.invalidate({ id: sheetId });
         toast({
           title: "Fiche signalée obsolète",
         });
@@ -43,6 +45,10 @@ export default function Actions({
     <div className="py-4">
       <div className="border border-slate-100 px-4 py-6 rounded-lg">
         <div className="flex flex-col space-y-2">
+          <span className="text-center bg-gray-100 p-2 rounded-md">
+            {shortId}
+          </span>
+          <Separator />
           {currentUser?.id === sheetUserId && (
             <Link
               href={`/sheets/${sheetId}/edit`}

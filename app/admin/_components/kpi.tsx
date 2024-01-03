@@ -87,7 +87,7 @@ export default function Kpi() {
                 {reportedSheets?.length || "0"}
               </div>
               <p className="text-xs text-muted-foreground">{`${Math.floor(
-                Number(sheets?.length) / Number(reportedSheets?.length)
+                (Number(reportedSheets?.length) * 100) / Number(sheets?.length)
               )}% des fiches`}</p>
             </>
           )}

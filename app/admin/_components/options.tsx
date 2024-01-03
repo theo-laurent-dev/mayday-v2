@@ -170,33 +170,9 @@ export default function Options() {
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <Group className="mr-2 h-4 w-4" />
-                <span>Groupes</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem>
-                    <Link
-                      href={`/admin/groups`}
-                      className="flex items-center space-x-2 w-full"
-                    >
-                      <GanttChart className="h-4 w-4" />
-                      <span>Liste</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    <span>Créer</span>
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
+              <span>Paramètrages</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

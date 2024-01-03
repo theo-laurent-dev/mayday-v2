@@ -1,11 +1,10 @@
 "use client";
 
 import { trpc } from "@/app/_trpc/client";
-import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -24,14 +23,11 @@ import { ProfileFormSchema } from "@/types/forms";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import {
-  ApplicationsWithRoles,
-  ProfileWithRole,
-  ProfileWithRoleAndApplications,
-} from "@/types/types";
+import { ApplicationsWithRoles, ProfileWithRole } from "@/types/types";
+import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 interface ProfileFormProps {
-  //   data: ProfileWithRoleAndApplications;
   profile: ProfileWithRole | undefined;
   isLoading: boolean;
   applications: ApplicationsWithRoles;
@@ -55,6 +51,29 @@ export default function ProfileForm({
         });
       },
     });
+
+  const breadcrumbLinks = [
+    {
+      label: "Administration",
+      href: "/admin",
+      current: false,
+    },
+    {
+      label: "Profils",
+      href: "/admin/profiles",
+      current: false,
+    },
+    {
+      label: profile?.label,
+      href: `/admin/profiles/${profile?.id}`,
+      current: false,
+    },
+    {
+      label: "Modification",
+      href: `/admin/profiles/${profile?.id}/edit`,
+      current: true,
+    },
+  ];
 
   type ProfileFormValues = z.infer<typeof ProfileFormSchema>;
 
@@ -83,6 +102,7 @@ export default function ProfileForm({
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+      <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
@@ -195,9 +215,11 @@ export default function ProfileForm({
                                             >
                                               <FormControl>
                                                 <Checkbox
-                                                  checked={field.value?.includes(
-                                                    `${app.name}.${role.name}`
-                                                  )}
+                                                  checked={
+                                                    field.value?.includes(
+                                                      `${app.name}.${role.name}`
+                                                    ) || hasFullPerm
+                                                  }
                                                   onCheckedChange={(
                                                     checked
                                                   ) => {
@@ -238,9 +260,17 @@ export default function ProfileForm({
                 )}
               />
             </div>
-            <Button type="submit" disabled={isUpdating}>
-              Mettre à jour
-            </Button>
+            <div className="flex space-x-2 items-center">
+              <Button type="submit" disabled={isUpdating}>
+                Mettre à jour
+              </Button>
+              <Link
+                href={`/admin/profiles/${profile?.id}`}
+                className={buttonVariants({ variant: "secondary" })}
+              >
+                Annuler
+              </Link>
+            </div>
           </form>
         </Form>
       </div>

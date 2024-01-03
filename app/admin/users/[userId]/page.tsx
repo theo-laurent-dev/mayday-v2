@@ -9,17 +9,13 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
-import { AlertOctagon, FileEdit } from "lucide-react";
+import { AlertOctagon, Ban, CheckCircle, FileEdit } from "lucide-react";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { toast } from "@/components/ui/use-toast";
 
 interface UserIdPageProps {
   params: {
@@ -28,9 +24,46 @@ interface UserIdPageProps {
 }
 
 export default function UserPage({ params }: UserIdPageProps) {
+  const utils = trpc.useContext();
   const { data, isLoading: userLoading } = trpc.getUser.useQuery({
     id: params.userId,
   });
+  const { mutate: updateStatusUser, isLoading: updateStatusUserLoading } =
+    trpc.switchStatusUser.useMutation({
+      onSuccess: (data) => {
+        utils.getUser.invalidate({
+          id: params.userId,
+        });
+        toast({
+          title: "Succès !",
+          description: `Utilisateur ${data.name} ${
+            data.isActive ? "activé" : "désactivé"
+          } !`,
+        });
+      },
+    });
+
+  const breadcrumbLinks = [
+    {
+      label: "Administration",
+      href: "/admin",
+      current: false,
+    },
+    {
+      label: "Utilisateurs",
+      href: "/admin/users",
+      current: false,
+    },
+    {
+      label: data?.name,
+      href: `/admin/users/${params.userId}`,
+      current: true,
+    },
+  ];
+
+  const handleStatusUser = () => {
+    updateStatusUser({ id: params.userId });
+  };
 
   if (userLoading) {
     return <div>Chargement ...</div>;
@@ -38,6 +71,7 @@ export default function UserPage({ params }: UserIdPageProps) {
 
   return (
     <HasPermissionShield required="users.view">
+      <Breadcrumbs breadcrumbLinks={breadcrumbLinks} className="py-8" />
       <div className="flex space-x-2">
         <div className="w-5/6">
           <div className="py-4 space-y-8">
@@ -64,8 +98,18 @@ export default function UserPage({ params }: UserIdPageProps) {
                   <div>
                     <Badge
                       variant={data?.isActive ? "secondary" : "destructive"}
+                      className="space-x-2"
                     >
-                      {data?.isActive ? "Actif" : "Inactif"}
+                      {data?.isActive ? (
+                        <CheckCircle className="w-3 h-3" />
+                      ) : (
+                        <AlertOctagon className="w-3 h-3" />
+                      )}
+                      {data?.isActive ? (
+                        <span>Actif</span>
+                      ) : (
+                        <span>Inactif</span>
+                      )}
                     </Badge>
                   </div>
                 </div>
@@ -74,15 +118,13 @@ export default function UserPage({ params }: UserIdPageProps) {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium">Groupes</h3>
+                    <h3 className="text-lg font-medium">Profil</h3>
                     <p className="text-sm text-muted-foreground">
-                      {`Liste des groupes de l'utilisateur`}
+                      {`Profil de l'utilisateur`}
                     </p>
                   </div>
                   <div>
-                    <Accordion type="single" collapsible className="w-full">
-                      ...
-                    </Accordion>
+                    <Badge variant="secondary">{data?.profile?.label}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -104,8 +146,8 @@ export default function UserPage({ params }: UserIdPageProps) {
 
                 <Button
                   variant={data?.isActive ? "destructive" : "default"}
-                  // disabled={reportSheetLoading || obsolete}
-                  // onClick={handleReport}
+                  disabled={updateStatusUserLoading}
+                  onClick={handleStatusUser}
                 >
                   <AlertOctagon className="w-4 h-4 mr-2" />
                   {data?.isActive ? "Désactiver" : "Activer"}

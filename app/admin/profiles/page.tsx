@@ -7,8 +7,21 @@ import { columns } from "@/app/admin/profiles/_components/data-table/columns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export default function ProfilesPage() {
+  const breadcrumbLinks = [
+    {
+      label: "Administration",
+      href: "/admin",
+      current: false,
+    },
+    {
+      label: "Profils",
+      href: "/admin/profiles",
+      current: true,
+    },
+  ];
   const { data: profiles, isLoading: profilesLoading } =
     trpc.getProfiles.useQuery();
 
@@ -19,6 +32,7 @@ export default function ProfilesPage() {
   return (
     <HasPermissionShield required="profiles.view">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">

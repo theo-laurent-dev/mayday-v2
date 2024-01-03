@@ -9,6 +9,8 @@ import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ApplicationWithRoles, role } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSession } from "next-auth/react";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 interface ProfileIdPageProps {
   params: {
@@ -17,9 +19,28 @@ interface ProfileIdPageProps {
 }
 
 export default function ProfilePage({ params }: ProfileIdPageProps) {
+  const session = useSession();
   const { data, isLoading } = trpc.getProfile.useQuery({
     id: params.profileId,
   });
+
+  const breadcrumbLinks = [
+    {
+      label: "Administration",
+      href: "/admin",
+      current: false,
+    },
+    {
+      label: "Profils",
+      href: "/admin/profiles",
+      current: false,
+    },
+    {
+      label: data?.profile.label,
+      href: `/admin/profiles/${params.profileId}`,
+      current: true,
+    },
+  ];
 
   if (isLoading) {
     return <ProfilePage.Skeleton />;
@@ -28,6 +49,7 @@ export default function ProfilePage({ params }: ProfileIdPageProps) {
   return (
     <HasPermissionShield required="profiles.view">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">
@@ -37,12 +59,22 @@ export default function ProfilePage({ params }: ProfileIdPageProps) {
               {data && data?.profile.name}
             </p>
           </div>
-          <Link
-            className={buttonVariants({ variant: "secondary" })}
-            href={`/admin/profiles/${params.profileId}/edit`}
-          >
-            Modifier
-          </Link>
+          {session &&
+            session?.data &&
+            session?.data?.user.profile.permissions &&
+            (Array.from(session?.data?.user.profile.permissions).includes(
+              "users.update"
+            ) ||
+              Array.from(session?.data?.user.profile.permissions).includes(
+                "users.*"
+              )) && (
+              <Link
+                className={buttonVariants({ variant: "secondary" })}
+                href={`/admin/profiles/${params.profileId}/edit`}
+              >
+                Modifier
+              </Link>
+            )}
         </div>
         <div className="grid grid-cols-3 gap-4">
           {data &&
@@ -77,7 +109,7 @@ export default function ProfilePage({ params }: ProfileIdPageProps) {
                             <Checkbox
                               name="permissions[]"
                               value={curPerm}
-                              defaultChecked={hasPerm}
+                              defaultChecked={hasPerm || allPermissions}
                               disabled
                             />
                           </li>

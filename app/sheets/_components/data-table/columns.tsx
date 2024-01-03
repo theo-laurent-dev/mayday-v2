@@ -47,7 +47,7 @@ export const columns: ColumnDef<SheetWithUser>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">{row.getValue("shortId")}</div>
+      <div className="w-[30px]">{row.getValue("shortId")}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -61,7 +61,7 @@ export const columns: ColumnDef<SheetWithUser>[] = [
       return (
         <div className="flex space-x-2">
           {row.original.obsolete && <Badge variant="outline">Obsolète</Badge>}
-          <span className="max-w-[500px] truncate font-medium">
+          <span className="w-[150px] max-w-[500px] truncate font-medium">
             {row.getValue("title")}
           </span>
         </div>
