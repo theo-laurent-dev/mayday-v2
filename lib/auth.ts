@@ -1,13 +1,10 @@
+import { db } from "@/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { db } from "@/db/index";
+import { NextAuthOptions } from "next-auth";
 import bcrypt from "bcrypt";
-import NextAuth, { AuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getSession } from "next-auth/react";
-import getCurrentUser from "@/app/_actions/getCurrentUser";
 
-export const authOptions: AuthOptions = {
-  // Configure one or more authentication providers
+export const authOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     CredentialsProvider({
@@ -110,6 +107,4 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
-
-export default NextAuth(authOptions);
+} satisfies NextAuthOptions;

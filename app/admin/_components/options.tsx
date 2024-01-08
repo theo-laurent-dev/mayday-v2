@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlertOctagon,
   GanttChart,
   Group,
   PlusCircle,
@@ -100,6 +101,25 @@ export default function Options() {
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <AlertOctagon className="mr-2 h-4 w-4" />
+                      <span>Obsoletes</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem>
+                          <Link
+                            href={`/admin/sheets/obsoletes`}
+                            className="flex items-center space-x-2 w-full"
+                          >
+                            <GanttChart className="h-4 w-4" />
+                            <span>Liste</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
                       <GanttChart className="mr-2 h-4 w-4" />

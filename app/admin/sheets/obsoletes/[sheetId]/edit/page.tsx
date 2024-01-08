@@ -2,7 +2,7 @@
 
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { trpc } from "@/app/_trpc/client";
-import EditSheetForm from "@/app/sheets/[sheetId]/edit/_components/EditSheetForm";
+import EditSheetForm from "@/app/admin/sheets/obsoletes/[sheetId]/edit/_components/EditSheetForm";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 interface SheetEditPageProps {
@@ -16,23 +16,28 @@ export default function SheetEditPage({ params }: SheetEditPageProps) {
   const { data: sheet, isLoading } = trpc.getSheet.useQuery({ id: sheetId });
   const breadcrumbLinks = [
     {
-      label: "Dashboard",
-      href: "/dashboard",
+      label: "Administration",
+      href: "/admin",
       current: false,
     },
     {
       label: "Fiches",
-      href: "/sheets",
+      href: "/admin/sheets",
+      current: false,
+    },
+    {
+      label: "Obsolètes",
+      href: "/admin/sheets/obsoletes",
       current: false,
     },
     {
       label: sheet?.title,
-      href: `/sheets/${sheet?.id}`,
+      href: `/admin/sheets/obsoletes/${sheet?.id}`,
       current: false,
     },
     {
       label: "Modification",
-      href: `/sheets/${sheet?.id}/edit`,
+      href: `/admin/sheets/obsoletes/${sheet?.id}/edit`,
       current: true,
     },
   ];
@@ -42,7 +47,7 @@ export default function SheetEditPage({ params }: SheetEditPageProps) {
   }
 
   return (
-    <HasPermissionShield required="sheets.edit">
+    <HasPermissionShield required="admin.*">
       <Breadcrumbs breadcrumbLinks={breadcrumbLinks} className="py-8" />
       <div>
         <EditSheetForm sheet={sheet} />

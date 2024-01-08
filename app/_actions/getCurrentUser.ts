@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { db } from "@/db/index";
+import { authOptions } from "@/lib/auth";
 
 export async function getSession() {
   return await getServerSession(authOptions);

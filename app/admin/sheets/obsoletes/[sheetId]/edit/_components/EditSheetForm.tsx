@@ -20,7 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SheetFormSchema } from "@/types/forms";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -51,8 +51,6 @@ interface SheetEditPageProps {
 }
 
 export default function SheetEditPage({ sheet }: SheetEditPageProps) {
-  const searchParams = useSearchParams();
-  const approved = searchParams.get("approved");
   const router = useRouter();
   const [subcategoriesDisabled, setSubcategoriesDisabled] =
     useState<boolean>(false);
@@ -61,10 +59,10 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
     resolver: zodResolver(SheetFormSchema),
   });
 
-  const { mutate: updateSheet, isLoading: isUpdating } =
-    trpc.updateSheet.useMutation({
+  const { mutate: adminUpdateSheet, isLoading: isUpdating } =
+    trpc.adminUpdateSheet.useMutation({
       onSuccess: (data) => {
-        router.push(`/sheets/${data.id}`);
+        router.push(`/admin/sheets/obsoletes`);
         toast({
           title: "Fiche modifiée",
           description: "Redirection vers la fiche ...",
@@ -87,10 +85,10 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
   };
 
   function onSubmit(data: z.infer<typeof SheetFormSchema>) {
-    updateSheet({
+    adminUpdateSheet({
       id: sheet?.id,
       ...data,
-      obsolete: approved !== null ? false : undefined,
+      obsolete: false,
     });
   }
 

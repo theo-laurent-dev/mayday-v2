@@ -8,9 +8,22 @@ import { columns } from "@/app/sheets/_components/data-table/columns";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export default function SheetsPage() {
   const { data: sheets, isLoading: sheetsLoading } = trpc.getSheets.useQuery();
+  const breadcrumbLinks = [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      current: false,
+    },
+    {
+      label: "Fiches",
+      href: "/sheets",
+      current: true,
+    },
+  ];
 
   if (sheetsLoading) {
     return <SheetsPage.Skeleton />;
@@ -19,6 +32,7 @@ export default function SheetsPage() {
   return (
     <HasPermissionShield required="sheets.view">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Fiches</h2>

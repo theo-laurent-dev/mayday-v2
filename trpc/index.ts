@@ -71,6 +71,44 @@ export const appRouter = router({
       },
     });
   }),
+  getObsoletesSheets: privateProcedure.query(async ({ ctx }) => {
+    const userId = ctx.userId;
+
+    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    return await db.sheet.findMany({
+      where: {
+        obsolete: true,
+        userId,
+      },
+    });
+  }),
+  approveSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const approvedSheet = await db.sheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          obsolete: false,
+        },
+      });
+
+      return approvedSheet;
+    }),
   getSheet: privateProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -394,6 +432,43 @@ export const appRouter = router({
       },
     });
   }),
+  adminUpdateSheet: privateProcedure
+    .input(SheetFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const sheet = await db.sheet.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updatedSheet = await db.sheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          shortDescription: input.shortDescription,
+          description: input.description,
+          category: input.category,
+          subcategory: input.subcategory,
+          categoryType: input.categoryType,
+          assignmentGroup: input.assignmentGroup,
+          criticity: input.criticity,
+          type: input.type,
+          published: input.published,
+          company: input.company,
+          obsolete: input.obsolete,
+        },
+      });
+
+      return updatedSheet;
+    }),
 });
 
 export type AppRouter = typeof appRouter;

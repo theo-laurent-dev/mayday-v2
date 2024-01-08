@@ -105,3 +105,5 @@ export type ProfileWithRole = RouterOutput["getProfile"]["profile"];
 export type ProfileWithRoleAndApplications = RouterOutput["getProfile"];
 
 export type ApplicationsWithRoles = RouterOutput["getApplications"];
+
+export type ObsoletesSheet = RouterOutput["getObsoletesSheets"][0];

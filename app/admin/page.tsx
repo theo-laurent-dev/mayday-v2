@@ -8,6 +8,7 @@ import Options from "@/app/admin/_components/options";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 
 export default function AdminPage() {
+  //TODO: ADD LOADING SKELETON FUNCTION
   return (
     <HasPermissionShield required="admin.view">
       <div className="py-4 space-y-8">

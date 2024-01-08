@@ -4,6 +4,7 @@ import { trpc } from "@/app/_trpc/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertOctagon, GanttChart, Users } from "lucide-react";
+import Link from "next/link";
 
 export default function Kpi() {
   const { data: sheets, isLoading: isLoadingSheets } =
@@ -70,29 +71,32 @@ export default function Kpi() {
           )}
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Obsolètes</CardTitle>
-          <AlertOctagon className="w-4 h-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          {isLoadingSheets ? (
-            <div className="flex flex-col space-y-1">
-              <Skeleton className="w-12 h-7" />
-              <Skeleton className="w-64 h-4" />
-            </div>
-          ) : (
-            <>
-              <div className="text-2xl font-bold">
-                {reportedSheets?.length || "0"}
+      <Link href={`/admin/sheets/obsoletes`}>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Obsolètes</CardTitle>
+            <AlertOctagon className="w-4 h-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoadingSheets ? (
+              <div className="flex flex-col space-y-1">
+                <Skeleton className="w-12 h-7" />
+                <Skeleton className="w-64 h-4" />
               </div>
-              <p className="text-xs text-muted-foreground">{`${Math.floor(
-                (Number(reportedSheets?.length) * 100) / Number(sheets?.length)
-              )}% des fiches`}</p>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {reportedSheets?.length || "0"}
+                </div>
+                <p className="text-xs text-muted-foreground">{`${Math.floor(
+                  (Number(reportedSheets?.length) * 100) /
+                    Number(sheets?.length)
+                )}% des fiches`}</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </Link>
       {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Active Now</CardTitle>

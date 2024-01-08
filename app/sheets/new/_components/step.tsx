@@ -164,7 +164,7 @@ export default function StepperSheetCreation({
                         <div>
                           <h3 className="text-lg font-medium">Description</h3>
                           <p className="text-sm text-muted-foreground">
-                            Informations concernant la procédure.
+                            Informations concernant la fiche.
                           </p>
                         </div>
                         <Separator />
