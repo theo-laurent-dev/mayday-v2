@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { HasPermissionShieldProps } from "@/types/HasPermissionShield";
+import { HasPermissionShieldProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 

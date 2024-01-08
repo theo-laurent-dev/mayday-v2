@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ProfileFormSchema, UserSchema } from "@/types/forms";
+import { ProfileFormSchema, UserFormSchema } from "@/types/forms";
 import { Ban, CheckCircle, Eye } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";

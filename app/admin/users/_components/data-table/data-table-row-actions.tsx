@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { UserSchema } from "@/types/forms";
+import { UserFormSchema } from "@/types/forms";
 import { Ban, CheckCircle, Eye } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
@@ -25,7 +25,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const user = UserSchema.parse(row.original);
+  const user = UserFormSchema.parse(row.original);
   const utils = trpc.useContext();
   const { mutate: switchStatusUser, isLoading: switchStatusUserLoading } =
     trpc.switchStatusUser.useMutation({

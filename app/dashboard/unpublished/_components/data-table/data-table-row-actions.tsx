@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { companies } from "@/data/data-table/data-table-constantes";
-import { SheetWithUserSchema } from "@/types/forms";
+import { SheetWithUserFormSchema } from "@/types/forms";
 import { BadgeCheck, Building2, PenSquare, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
@@ -31,7 +31,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const sheet = SheetWithUserSchema.parse(row.original);
+  const sheet = SheetWithUserFormSchema.parse(row.original);
   const utils = trpc.useContext();
   const { mutate: publishSheet, isLoading: publishSheetLoading } =
     trpc.publishSheet.useMutation({

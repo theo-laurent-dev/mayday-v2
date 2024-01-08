@@ -1,7 +1,15 @@
-import getCurrentUser from "@/app/_actions/getCurrentUser";
 import { AppRouter } from "@/trpc";
 import { JsonValue } from "@prisma/client/runtime/library";
 import type { inferRouterOutputs } from "@trpc/server";
+import { ReactNode } from "react";
+
+type HOC = {
+  children: ReactNode;
+};
+
+export type HasPermissionShieldProps = HOC & {
+  required: string;
+};
 
 export type sheet = {
   id: string;
@@ -96,6 +104,7 @@ type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type SheetsWithUser = RouterOutput["getSheets"];
 export type SheetWithUser = RouterOutput["getSheet"];
+export type ObsoletesSheet = RouterOutput["getObsoletesSheets"][0];
 
 export type UsersWithRole = RouterOutput["getUsers"];
 export type UserWithRole = RouterOutput["getUser"];
@@ -105,5 +114,3 @@ export type ProfileWithRole = RouterOutput["getProfile"]["profile"];
 export type ProfileWithRoleAndApplications = RouterOutput["getProfile"];
 
 export type ApplicationsWithRoles = RouterOutput["getApplications"];
-
-export type ObsoletesSheet = RouterOutput["getObsoletesSheets"][0];

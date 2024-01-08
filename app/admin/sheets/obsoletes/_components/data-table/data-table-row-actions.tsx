@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ObsoletesSheet } from "@/types/forms";
+import { SheetFormSchema } from "@/types/forms";
 import { CheckCircle, Eye, Pencil } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
@@ -25,7 +25,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const osheet = ObsoletesSheet.parse(row.original);
+  const osheet = SheetFormSchema.parse(row.original);
   const utils = trpc.useContext();
   const { mutate: approveSheet, isLoading: approveSheetStatus } =
     trpc.approveSheet.useMutation({
@@ -80,7 +80,7 @@ export function DataTableRowActions<TData>({
               variant="item"
               size="item"
               className="space-x-2"
-              onClick={() => handleApproveSheet(osheet.id)}
+              onClick={() => handleApproveSheet(osheet.id || "")}
               disabled={approveSheetStatus}
             >
               <CheckCircle className="w-4 h-4" />
