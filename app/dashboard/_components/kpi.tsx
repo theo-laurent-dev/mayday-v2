@@ -27,7 +27,7 @@ export default function Kpi({ userUnpublishedSheets }: KpiProps) {
         </Card>
       </Link>
 
-      <Card>
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
           <svg
@@ -94,7 +94,7 @@ export default function Kpi({ userUnpublishedSheets }: KpiProps) {
           <div className="text-2xl font-bold">+573</div>
           <p className="text-xs text-muted-foreground">+201 since last hour</p>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

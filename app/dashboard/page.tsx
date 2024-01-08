@@ -1,12 +1,12 @@
 "use client";
 
-import Kpi from "@/app/dashboard/_components/kpi";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { trpc } from "@/app/_trpc/client";
 import Link from "next/link";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import TabsWrapper from "@/app/dashboard/_components/tabs";
 
 export default function Dashboard() {
   const { data: userUnpublishedSheets, isLoading } =
@@ -18,14 +18,16 @@ export default function Dashboard() {
 
   return (
     <HasPermissionShield required="dashboard.view">
-      <div className="py-4 space-y-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <Link href={"/sheets/new"}>
-            <Button>Nouvelle fiche</Button>
-          </Link>
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <div className="flex items-center space-x-2">
+            <Link href={"/sheets/new"} className={buttonVariants()}>
+              Nouvelle fiche
+            </Link>
+          </div>
         </div>
-        <Kpi userUnpublishedSheets={userUnpublishedSheets} />
+        <TabsWrapper userUnpublishedSheets={userUnpublishedSheets} />
       </div>
     </HasPermissionShield>
   );
