@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Dispatch, SetStateAction, useState } from "react";
 import * as z from "zod";
 
 import { trpc } from "@/app/_trpc/client";
@@ -23,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 const accountFormSchema = z.object({
   name: z
@@ -48,9 +48,6 @@ const accountFormSchema = z.object({
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
-interface RegisterFormProps {
-  setForm: Dispatch<SetStateAction<string>>;
-}
 
 // This can come from your database or API.
 const defaultValues: Partial<AccountFormValues> = {
@@ -59,7 +56,7 @@ const defaultValues: Partial<AccountFormValues> = {
   // password: "test",
 };
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ setForm }) => {
+const RegisterForm: React.FC = () => {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -74,7 +71,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setForm }) => {
 
   const { mutate: onRegister, isLoading } = trpc.register.useMutation({
     onSuccess: () => {
-      setForm("login");
       toast({
         title: "Bienvenue !",
         description: "Tu peux désormais te connecter.",
@@ -143,11 +139,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setForm }) => {
       </form>
       <Separator />
       <div className="text-center">
-        <Label>
-          Déjà un compte ?{" "}
-          <Button variant="link" onClick={() => setForm("login")}>
-            {"Me connecter"}
-          </Button>
+        <Label className="flex justify-center items-center space-x-2">
+          <span>Déjà un compte ?</span>
+          <Link href={"/auth/login"}>{"Me connecter"}</Link>
         </Label>
       </div>
     </Form>

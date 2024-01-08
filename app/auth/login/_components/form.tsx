@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const accountFormSchema = z.object({
   email: z
@@ -31,9 +32,6 @@ const accountFormSchema = z.object({
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
-interface LoginFormProps {
-  setForm: Dispatch<SetStateAction<string>>;
-}
 
 // This can come from your database or API.
 const defaultValues: Partial<AccountFormValues> = {
@@ -41,7 +39,7 @@ const defaultValues: Partial<AccountFormValues> = {
   // dob: new Date("2023-01-23"),
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
+const LoginForm: React.FC = () => {
   const router = useRouter();
   const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +69,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
 
     signIn("credentials", {
       ...data,
+      callbackUrl: "/dashboard",
       redirect: true,
     }).then((callback) => {
       if (callback?.ok) {
@@ -79,8 +78,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
           title: "Connecté !",
           description: "Redirection vers le Dashboard ...",
         });
-        router.push("/dashboard");
-        router.refresh();
       }
       if (callback?.error) {
         toast({
@@ -132,11 +129,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm }) => {
       </form>
       <Separator />
       <div className="text-center">
-        <Label>
-          Pas encore de compte ?{" "}
-          <Button variant="link" onClick={() => setForm("register")}>
-            {"M'inscrire"}
-          </Button>
+        <Label className="flex items-center justify-center space-x-2">
+          <span>Pas encore de compte ?</span>
+          <Link href={"/auth/register"}>{"M'inscrire"}</Link>
         </Label>
       </div>
     </Form>

@@ -100,7 +100,7 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: "/",
+    signIn: "/auth/login",
   },
   debug: process.env.NODE_ENV === "development",
   session: {

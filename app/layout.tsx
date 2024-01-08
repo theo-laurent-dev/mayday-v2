@@ -10,7 +10,9 @@ import Providers from "@/providers/Providers";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { JsonArray } from "@prisma/client/runtime/library";
-import NavAdminItems from "./_components/nav/nav-admin-item";
+import NavAdminItems from "@/app/_components/nav/nav-admin-item";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +26,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getCurrentUser();
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang="en">
@@ -32,7 +34,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <NextAuthSessionProvider>
             <main>
-              {session !== null && (
+              {session !== null ? (
                 <>
                   <div className="border-b">
                     <div className="flex h-16 items-center px-4">
@@ -40,12 +42,12 @@ export default async function RootLayout({
                       <NavItems className="mx-6" />
                       <div className="ml-auto flex items-center space-x-4">
                         {((session &&
-                          session.profile.permissions &&
+                          session.user.profile.permissions &&
                           Array.from(
-                            session.profile.permissions as JsonArray
+                            session.user.profile.permissions as JsonArray
                           ).includes("admin.*")) ||
                           Array.from(
-                            session.profile.permissions as JsonArray
+                            session.user.profile.permissions as JsonArray
                           ).includes("admin.view")) && <NavAdminItems />}
                         <UserNav />
                       </div>
@@ -53,8 +55,7 @@ export default async function RootLayout({
                   </div>
                   <div className="container mx-auto">{children}</div>
                 </>
-              )}
-              {session === null && (
+              ) : (
                 <div className="h-screen flex justify-center items-center">
                   {children}
                 </div>
