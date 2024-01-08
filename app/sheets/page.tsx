@@ -8,7 +8,7 @@ import { columns } from "@/app/sheets/_components/data-table/columns";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { Breadcrumbs, BreadcrumbsSkeleton } from "@/components/ui/breadcrumbs";
 
 export default function SheetsPage() {
   const { data: sheets, isLoading: sheetsLoading } = trpc.getSheets.useQuery();
@@ -51,10 +51,14 @@ export default function SheetsPage() {
 SheetsPage.Skeleton = function SheetsSkeleton() {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+      <BreadcrumbsSkeleton />
       <div className="flex items-center justify-between space-y-2">
         <div>
           <Skeleton className="h-8 w-[200px]" />
           <Skeleton className="h-4 w-[300px] mt-1" />
+        </div>
+        <div>
+          <Skeleton className="h-8 w-[200px]" />
         </div>
       </div>
       <div className="flex justify-between items-center">

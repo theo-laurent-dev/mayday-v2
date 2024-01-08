@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from "./skeleton";
 
 export type BreadcrumbLink = {
   label: string | undefined;
@@ -31,6 +32,20 @@ export function Breadcrumbs({ breadcrumbLinks, className }: Breadcrumbs) {
             </Link>
           </span>
         ))}
+    </div>
+  );
+}
+
+interface BreadcrumbsSkeleton extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function BreadcrumbsSkeleton({ className }: BreadcrumbsSkeleton) {
+  return (
+    <div className={cn("flex items-center space-x-2", className)}>
+      <Skeleton className="h-4 w-[100px]" />
+      <ChevronRight className="text-black h-4 w-4" />
+      <Skeleton className="h-4 w-[100px]" />
+      <ChevronRight className="text-black h-4 w-4" />
+      <Skeleton className="h-4 w-[100px]" />
     </div>
   );
 }

@@ -3,7 +3,8 @@
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { trpc } from "@/app/_trpc/client";
 import EditSheetForm from "@/app/sheets/[sheetId]/edit/_components/EditSheetForm";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { Breadcrumbs, BreadcrumbsSkeleton } from "@/components/ui/breadcrumbs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SheetEditPageProps {
   params: {
@@ -38,7 +39,7 @@ export default function SheetEditPage({ params }: SheetEditPageProps) {
   ];
 
   if (isLoading) {
-    return "Chargement ...";
+    return <SheetEditPage.Skeleton />;
   }
 
   return (
@@ -50,3 +51,118 @@ export default function SheetEditPage({ params }: SheetEditPageProps) {
     </HasPermissionShield>
   );
 }
+
+SheetEditPage.Skeleton = function SheetEditPageSkeleton() {
+  return (
+    <div>
+      <BreadcrumbsSkeleton className="py-8" />
+      <div className="py-4 space-y-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <Skeleton className="h-10 w-[300px]" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-6 w-[300px] mt-1" />
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-8 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div className="flex flex-col space-y-4">
+            <div>
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-6 w-[300px] mt-1" />
+            </div>
+            <div>
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-6 w-[300px] mt-1" />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-8 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div className="flex flex-col space-y-4">
+            <div>
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-6 w-[300px] mt-1" />
+            </div>
+            <div>
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-6 w-[300px] mt-1" />
+            </div>
+          </div>
+          <div>
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-6 w-[300px] mt-1" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div>
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-6 w-[300px] mt-1" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div>
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-6 w-[300px] mt-1" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div>
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-6 w-[300px] mt-1" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <div>
+            <Skeleton className="h-4 w-[200px]" />
+            <Skeleton className="h-6 w-[300px] mt-1" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <Skeleton className="h-6 w-[200px]" />
+            <Skeleton className="h-4 w-[300px] mt-1" />
+          </div>
+          <Skeleton className="h-1 rounded-full w-full" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-8 w-[200px]" />
+      </div>
+    </div>
+  );
+};
