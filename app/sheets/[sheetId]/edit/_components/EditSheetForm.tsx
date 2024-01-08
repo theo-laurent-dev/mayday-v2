@@ -21,7 +21,7 @@ import { trpc } from "@/app/_trpc/client";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { SheetFormSchema } from "@/types/forms";
+import { SheetFormSchema } from "@/types/schemas";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,

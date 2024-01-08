@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { companies } from "@/data/data-table/data-table-constantes";
-import { SheetWithUserFormSchema } from "@/types/forms";
+import { SheetWithUserFormSchema } from "@/types/schemas";
 import { BadgeCheck, Building2, PenSquare, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";

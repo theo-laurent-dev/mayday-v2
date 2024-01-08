@@ -9,7 +9,7 @@ import {
   RegisterFormSchema,
   SheetFormSchema,
   UserUpdateFormSchema,
-} from "@/types/forms";
+} from "@/types/schemas";
 
 export const appRouter = router({
   register: publicProcedure

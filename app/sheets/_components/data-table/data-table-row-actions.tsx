@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { SheetWithUserFormSchema } from "@/types/forms";
+import { SheetWithUserFormSchema } from "@/types/schemas";
 import { AlertOctagon, Eye } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";

@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-import { SheetFormSchema } from "@/types/forms";
+import { SheetFormSchema } from "@/types/schemas";
 import {
   Select,
   SelectContent,

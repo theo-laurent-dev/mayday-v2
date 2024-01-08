@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { UserUpdateFormSchema } from "@/types/forms";
+import { UserUpdateFormSchema } from "@/types/schemas";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
