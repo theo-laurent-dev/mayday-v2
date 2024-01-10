@@ -173,6 +173,7 @@ export const SheetWithUserFormSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   user: UserFormSchema,
+  favoritesUsers: z.array(UserFormSchema),
 });
 
 export const ProfileFormSchema = z.object({

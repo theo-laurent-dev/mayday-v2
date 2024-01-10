@@ -84,7 +84,6 @@ export const appRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      //checker si l'ancien mdp match bien avec la bdd (hashedpwd)
       const isCorrectPassword = await bcrypt.compare(
         input.currentPassword,
         user.hashedPassword
@@ -117,6 +116,25 @@ export const appRouter = router({
       },
       include: {
         user: true,
+        favoritesUsers: true,
+      },
+    });
+  }),
+  getFavoritesUserSheets: privateProcedure.query(async ({ ctx }) => {
+    const userId = ctx.userId;
+
+    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    return await db.sheet.findMany({
+      where: {
+        favoritesUsers: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        user: true,
       },
     });
   }),
@@ -132,6 +150,7 @@ export const appRouter = router({
       },
       include: {
         user: true,
+        favoritesUsers: true,
       },
     });
   }),
@@ -182,6 +201,7 @@ export const appRouter = router({
         },
         include: {
           user: true,
+          favoritesUsers: true,
         },
       });
       if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
@@ -238,6 +258,65 @@ export const appRouter = router({
         },
         data: {
           obsolete: true,
+        },
+      });
+
+      return updatedSheet;
+    }),
+  favoriteSheet: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const user = await db.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const sheet = await db.sheet.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+        include: {
+          favoritesUsers: true,
+        },
+      });
+      const alreadyFavorite = sheet.favoritesUsers.filter(
+        (u) => u.id === user.id
+      );
+
+      if (sheet.favoritesUsers.length > 0 && alreadyFavorite.length > 0) {
+        return await db.sheet.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            favoritesUsers: {
+              disconnect: [user],
+            },
+          },
+          include: {
+            favoritesUsers: true,
+          },
+        });
+      }
+
+      const updatedSheet = await db.sheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          favoritesUsers: {
+            connect: [user],
+          },
+        },
+        include: {
+          favoritesUsers: true,
         },
       });
 

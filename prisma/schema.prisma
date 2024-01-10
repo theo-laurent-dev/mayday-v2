@@ -61,9 +61,10 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  account Account[]
-  session Session[]
-  Sheet   Sheet[]
+  account   Account[]
+  session   Session[]
+  Sheet     Sheet[]   @relation("Creator")
+  favorites Sheet[]
 
   profile   Profile @relation(fields: [profileId], references: [id])
   profileId String
@@ -92,8 +93,10 @@ model Sheet {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], name: "Creator")
   userId String
+
+  favoritesUsers User[]
 
   @@index([userId])
 }
@@ -138,41 +141,3 @@ model Application {
 
   roles Role[]
 }
-
-// model UserGroup {
-//   id    String @id @default(uuid())
-//   name  String @unique
-//   label String
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   users User[]
-//   roles Role[]
-// }
-
-// model Role {
-//   id    String @id @default(uuid())
-//   name  String @unique
-//   label String
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   groups     UserGroup[]
-//   permission Permission[]
-// }
-
-// model Permission {
-//   id    String @id @default(uuid())
-//   name  String @unique
-//   label String
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   role   Role   @relation(fields: [roleId], references: [id])
-//   roleId String
-
-//   @@index([roleId])
-// }

@@ -1,6 +1,6 @@
 "use client";
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { BookmarkFilledIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { SheetWithUserFormSchema } from "@/types/schemas";
-import { AlertOctagon, Eye } from "lucide-react";
+import { AlertOctagon, BookMarked, Bookmark, Eye, Heart } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
+import { useSession } from "next-auth/react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -25,8 +26,12 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+  const session = useSession();
   const sheet = SheetWithUserFormSchema.parse(row.original);
   const utils = trpc.useContext();
+  const isFavorite =
+    sheet.favoritesUsers.filter((u) => u.id === session?.data?.user.id).length >
+    0;
   const { mutate: reportSheet, isLoading: reportSheetLoading } =
     trpc.reportSheet.useMutation({
       onSuccess: () => {
@@ -36,9 +41,25 @@ export function DataTableRowActions<TData>({
         });
       },
     });
+  const { mutate: favoriteSheet, isLoading: favoriteSheetLoading } =
+    trpc.favoriteSheet.useMutation({
+      onSuccess: (sheetUpdated) => {
+        const favorited = sheetUpdated.favoritesUsers.filter(
+          (u) => u.id === session?.data?.user.id
+        );
+        utils.getSheets.invalidate();
+        toast({
+          title: `Fiche ${favorited.length > 0 ? "épinglée" : "désépinglée"}`,
+        });
+      },
+    });
 
   const handleReport = (id: string) => {
     reportSheet({ id });
+  };
+
+  const handleFavorite = (id: string) => {
+    favoriteSheet({ id });
   };
 
   return (
@@ -74,6 +95,29 @@ export function DataTableRowActions<TData>({
               disabled={reportSheetLoading || sheet.obsolete}
             >
               <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
+            </Button>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <div className="w-full">
+            <Button
+              variant="item"
+              size="item"
+              className="space-x-2"
+              onClick={() => handleFavorite(sheet.id)}
+              disabled={favoriteSheetLoading}
+            >
+              {isFavorite ? (
+                <>
+                  <BookmarkFilledIcon className="w-4 h-4" />
+                  <span>Désépingler</span>
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-4 h-4" />
+                  <span>Epingler</span>
+                </>
+              )}
             </Button>
           </div>
         </DropdownMenuItem>

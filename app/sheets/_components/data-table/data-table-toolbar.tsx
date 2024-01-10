@@ -14,7 +14,6 @@ import {
   types,
 } from "@/data/data-table/data-table-constantes";
 import { useEffect, useState } from "react";
-import { User } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { categories, subcategories } from "@/data/sheets";
 
