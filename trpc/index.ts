@@ -5,6 +5,8 @@ import { db } from "@/db";
 import { z } from "zod";
 import getCurrentUser from "@/app/_actions/getCurrentUser";
 import {
+  AccountUpdateNameFormSchema,
+  AccountUpdatePasswordFormSchema,
   ProfileFormSchema,
   RegisterFormSchema,
   SheetFormSchema,
@@ -40,6 +42,68 @@ export const appRouter = router({
       });
 
       return user;
+    }),
+  updateAccount: privateProcedure
+    .input(AccountUpdateNameFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const user = await db.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const accountUpdated = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+
+      return accountUpdated;
+    }),
+  updateAccountPassword: privateProcedure
+    .input(AccountUpdatePasswordFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const user = await db.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      //checker si l'ancien mdp match bien avec la bdd (hashedpwd)
+      const isCorrectPassword = await bcrypt.compare(
+        input.currentPassword,
+        user.hashedPassword
+      );
+
+      if (!isCorrectPassword) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const hashedPassword = await bcrypt.hash(input.newPassword, 12);
+
+      const accountUpdated = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          hashedPassword,
+        },
+      });
+
+      return accountUpdated;
     }),
   getCurrentUser: publicProcedure.query(async ({ ctx }) => {
     const user = await getCurrentUser();

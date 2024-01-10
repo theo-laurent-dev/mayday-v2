@@ -181,3 +181,12 @@ export const ProfileFormSchema = z.object({
   label: z.string(),
   permissions: z.string().array(),
 });
+
+export const AccountUpdateNameFormSchema = z.object({
+  name: z.string(),
+});
+
+export const AccountUpdatePasswordFormSchema = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string(),
+});

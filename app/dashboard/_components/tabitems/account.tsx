@@ -1,5 +1,6 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,32 +10,80 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/use-toast";
+import { AccountUpdateNameFormSchema } from "@/types/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function TabItemAccount() {
-  //faire la partie form
+  const { data, update: sessionUpdate } = useSession();
+
+  type AccountUpdateNameFormValues = z.infer<
+    typeof AccountUpdateNameFormSchema
+  >;
+
+  const form = useForm<AccountUpdateNameFormValues>({
+    resolver: zodResolver(AccountUpdateNameFormSchema),
+  });
+
+  const { mutate: updateAccount, isLoading: updateAccountLoading } =
+    trpc.updateAccount.useMutation({
+      onSuccess: () => {
+        sessionUpdate();
+        toast({
+          title: "Succès !",
+          description: "Votre nom a bien été mis à jour.",
+        });
+      },
+    });
+
+  function onSubmit(data: AccountUpdateNameFormValues) {
+    updateAccount(data);
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Account</CardTitle>
-        <CardDescription>
-          Make changes to your account here. Click save when re done.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="space-y-1">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" defaultValue="Pedro Duarte" />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="username">Username</Label>
-          <Input id="username" defaultValue="@peduarte" />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button>Save changes</Button>
-      </CardFooter>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Compte</CardTitle>
+            <CardDescription>
+              Modifiez vos informations personnelles.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <FormField
+              control={form.control}
+              name="name"
+              defaultValue={data?.user.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nom</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <Button disabled={updateAccountLoading}>Mettre à jour</Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }

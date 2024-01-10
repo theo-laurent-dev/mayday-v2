@@ -70,7 +70,7 @@ const LoginForm: React.FC = () => {
     signIn("credentials", {
       ...data,
       callbackUrl: "/dashboard",
-      redirect: true,
+      redirect: false,
     }).then((callback) => {
       if (callback?.ok) {
         setIsLoading(false);
@@ -80,6 +80,7 @@ const LoginForm: React.FC = () => {
         });
       }
       if (callback?.error) {
+        setIsLoading(false);
         toast({
           title: "Erreur !",
           description: callback?.error,

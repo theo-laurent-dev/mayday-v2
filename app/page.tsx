@@ -8,7 +8,7 @@ export default function App() {
   const router = useRouter();
 
   useEffect(() => {
-    return router.push("/auth/login");
+    return router.push("/dashboard");
   }, [router]);
   return (
     <div className="h-screen flex justify-center items-center">
