@@ -7,6 +7,7 @@ import Sheet from "@/app/sheets/[sheetId]/_components/Sheet";
 import Actions from "@/app/sheets/[sheetId]/_components/Actions";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { useSession } from "next-auth/react";
 
 interface SheetIdPageProps {
   params: {
@@ -15,6 +16,7 @@ interface SheetIdPageProps {
 }
 
 export default function SheetIdPage({ params }: SheetIdPageProps) {
+  const session = useSession();
   //TRPC
   const { data: sheet, isLoading: sheetLoading } = trpc.getSheet.useQuery({
     id: params.sheetId,
@@ -54,6 +56,13 @@ export default function SheetIdPage({ params }: SheetIdPageProps) {
             sheetUserId={sheet?.userId}
             obsolete={sheet?.obsolete || false}
             shortId={sheet?.shortId}
+            isFavorite={
+              (sheet &&
+                sheet?.favoritesUsers.filter(
+                  (u) => u.id === session?.data?.user.id
+                ).length > 0) ||
+              false
+            }
           />
         </div>
       </div>

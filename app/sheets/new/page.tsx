@@ -27,7 +27,7 @@ export default function SheetNewPage() {
   ];
 
   return (
-    <HasPermissionShield required="sheets.new">
+    <HasPermissionShield required="sheets.create">
       <Breadcrumbs breadcrumbLinks={breadcrumbLinks} className="py-8" />
       <div className="py-4">
         <Card>

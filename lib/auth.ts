@@ -93,7 +93,15 @@ export const authOptions = {
           email: session.user.email,
         },
         include: {
-          profile: true,
+          profile: {
+            include: {
+              roles: {
+                include: {
+                  application: true,
+                },
+              },
+            },
+          },
         },
       });
 

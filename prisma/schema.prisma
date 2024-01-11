@@ -124,11 +124,9 @@ model Role {
 
   application   Application @relation(fields: [applicationId], references: [id])
   applicationId String
-  profile       Profile     @relation(fields: [profileId], references: [id])
-  profileId     String
+  Profiles      Profile[]
 
   @@index([applicationId])
-  @@index([profileId])
 }
 
 model Application {

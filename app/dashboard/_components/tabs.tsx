@@ -6,6 +6,8 @@ import TabItemOverview from "@/app/dashboard/_components/tabitems/overview";
 import TabItemFavorites from "@/app/dashboard/_components/tabitems/favorites";
 import TabItemAccount from "@/app/dashboard/_components/tabitems/account";
 import TabItemPassword from "@/app/dashboard/_components/tabitems/password";
+import { useSession } from "next-auth/react";
+import { hasPerm } from "@/lib/utils";
 
 interface TabsWrapperProps {
   userUnpublishedSheets: SheetsWithUser | undefined;
@@ -14,13 +16,45 @@ interface TabsWrapperProps {
 export default function TabsWrapper({
   userUnpublishedSheets,
 }: TabsWrapperProps) {
+  const session = useSession();
+
   return (
     <Tabs defaultValue="overview" className="space-y-4">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="favorites">Favoris</TabsTrigger>
-        <TabsTrigger value="account">Compte</TabsTrigger>
-        <TabsTrigger value="password">Mot de passe</TabsTrigger>
+        <TabsTrigger
+          value="favorites"
+          disabled={
+            !hasPerm({
+              required: "sheets.favorite",
+              roles: session?.data?.user.profile.roles,
+            })
+          }
+        >
+          Favoris
+        </TabsTrigger>
+        <TabsTrigger
+          value="account"
+          disabled={
+            !hasPerm({
+              required: "account.update",
+              roles: session?.data?.user.profile.roles,
+            })
+          }
+        >
+          Compte
+        </TabsTrigger>
+        <TabsTrigger
+          value="password"
+          disabled={
+            !hasPerm({
+              required: "password.update",
+              roles: session?.data?.user.profile.roles,
+            })
+          }
+        >
+          Mot de passe
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="overview" className="space-y-4">
         <TabItemOverview userUnpublishedSheets={userUnpublishedSheets} />

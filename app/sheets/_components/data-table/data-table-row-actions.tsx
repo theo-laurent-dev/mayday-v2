@@ -18,6 +18,7 @@ import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
+import { hasPerm } from "@/lib/utils";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -74,53 +75,70 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>
-          <div className="w-full">
-            <Link
-              href={`/sheets/${sheet.id}`}
-              className="flex justify-start items-center space-x-2"
-            >
-              <Eye className="w-4 h-4" /> <span>Voir</span>
-            </Link>
-          </div>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <div className="w-full">
-            <Button
-              variant="item"
-              size="item"
-              className="space-x-2"
-              onClick={() => handleReport(sheet.id)}
-              disabled={reportSheetLoading || sheet.obsolete}
-            >
-              <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
-            </Button>
-          </div>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <div className="w-full">
-            <Button
-              variant="item"
-              size="item"
-              className="space-x-2"
-              onClick={() => handleFavorite(sheet.id)}
-              disabled={favoriteSheetLoading}
-            >
-              {isFavorite ? (
-                <>
-                  <BookmarkFilledIcon className="w-4 h-4" />
-                  <span>Désépingler</span>
-                </>
-              ) : (
-                <>
-                  <Bookmark className="w-4 h-4" />
-                  <span>Epingler</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </DropdownMenuItem>
+        {hasPerm({
+          required: "sheets.view",
+          roles: session?.data?.user.profile.roles,
+        }) && (
+          <>
+            <DropdownMenuItem>
+              <div className="w-full">
+                <Link
+                  href={`/sheets/${sheet.id}`}
+                  className="flex justify-start items-center space-x-2"
+                >
+                  <Eye className="w-4 h-4" /> <span>Voir</span>
+                </Link>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {hasPerm({
+          required: "sheets.report",
+          roles: session?.data?.user.profile.roles,
+        }) && (
+          <DropdownMenuItem>
+            <div className="w-full">
+              <Button
+                variant="item"
+                size="item"
+                className="space-x-2"
+                onClick={() => handleReport(sheet.id)}
+                disabled={reportSheetLoading || sheet.obsolete}
+              >
+                <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
+              </Button>
+            </div>
+          </DropdownMenuItem>
+        )}
+        {hasPerm({
+          required: "sheets.favorite",
+          roles: session?.data?.user.profile.roles,
+        }) && (
+          <DropdownMenuItem>
+            <div className="w-full">
+              <Button
+                variant="item"
+                size="item"
+                className="space-x-2"
+                onClick={() => handleFavorite(sheet.id)}
+                disabled={favoriteSheetLoading}
+              >
+                {isFavorite ? (
+                  <>
+                    <BookmarkFilledIcon className="w-4 h-4" />
+                    <span>Désépingler</span>
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="w-4 h-4" />
+                    <span>Epingler</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
