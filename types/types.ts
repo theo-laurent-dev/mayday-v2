@@ -60,23 +60,6 @@ export type role = {
   applicationId: string;
 };
 
-export type ApplicationWithRoles = {
-  name: string;
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  label: string;
-  roles: {
-    name: string;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    profileId: string;
-    label: string;
-    applicationId: string;
-  }[];
-};
-
 export type CurrentUser = {
   id: string;
   name: string;
@@ -114,5 +97,6 @@ export type ProfileWithRole = RouterOutput["getProfile"]["profile"];
 export type ProfileWithRoleAndApplications = RouterOutput["getProfile"];
 
 export type ApplicationsWithRoles = RouterOutput["getApplications"];
+export type ApplicationWithRoles = RouterOutput["getApplications"][0];
 
 export type RolesWithApplications = RouterOutput["getRoles"];
