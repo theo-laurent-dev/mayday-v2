@@ -43,7 +43,7 @@ export default function SheetEditPage({ params }: SheetEditPageProps) {
   }
 
   return (
-    <HasPermissionShield required="sheets.edit">
+    <HasPermissionShield required="sheets.update">
       <Breadcrumbs breadcrumbLinks={breadcrumbLinks} className="py-8" />
       <div>
         <EditSheetForm sheet={sheet} />

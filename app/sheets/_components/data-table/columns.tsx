@@ -61,7 +61,7 @@ export const columns: ColumnDef<SheetWithUser>[] = [
       return (
         <div className="flex space-x-2">
           {row.original.obsolete && <Badge variant="outline">Obsolète</Badge>}
-          <span className="w-[150px] max-w-[500px] truncate font-medium">
+          <span className="w-[200px] max-w-[500px] truncate font-medium">
             {row.getValue("title")}
           </span>
         </div>

@@ -308,6 +308,7 @@ async function seed() {
   console.log(chalk.cyan("---- SHEETS ----"));
   const sheet1 = await db.sheet.create({
     data: {
+      shortId: "F-1",
       title: "sheet 1",
       shortDescription: "sheet 1",
       description: "<h1>test</h1>",

@@ -79,65 +79,68 @@ export function DataTableRowActions<TData>({
           required: "sheets.view",
           roles: session?.data?.user.profile.roles,
         }) && (
-          <>
-            <DropdownMenuItem>
-              <div className="w-full">
-                <Link
-                  href={`/sheets/${sheet.id}`}
-                  className="flex justify-start items-center space-x-2"
-                >
-                  <Eye className="w-4 h-4" /> <span>Voir</span>
-                </Link>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-          </>
+          <DropdownMenuItem>
+            <div className="w-full">
+              <Link
+                href={`/sheets/${sheet.id}`}
+                className="flex justify-start items-center space-x-2"
+              >
+                <Eye className="w-4 h-4" /> <span>Voir</span>
+              </Link>
+            </div>
+          </DropdownMenuItem>
         )}
         {hasPerm({
           required: "sheets.report",
           roles: session?.data?.user.profile.roles,
         }) && (
-          <DropdownMenuItem>
-            <div className="w-full">
-              <Button
-                variant="item"
-                size="item"
-                className="space-x-2"
-                onClick={() => handleReport(sheet.id)}
-                disabled={reportSheetLoading || sheet.obsolete}
-              >
-                <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
-              </Button>
-            </div>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <div className="w-full">
+                <Button
+                  variant="item"
+                  size="item"
+                  className="space-x-2"
+                  onClick={() => handleReport(sheet.id)}
+                  disabled={reportSheetLoading || sheet.obsolete}
+                >
+                  <AlertOctagon className="w-4 h-4" /> <span>Signaler</span>
+                </Button>
+              </div>
+            </DropdownMenuItem>
+          </>
         )}
         {hasPerm({
           required: "sheets.favorite",
           roles: session?.data?.user.profile.roles,
         }) && (
-          <DropdownMenuItem>
-            <div className="w-full">
-              <Button
-                variant="item"
-                size="item"
-                className="space-x-2"
-                onClick={() => handleFavorite(sheet.id)}
-                disabled={favoriteSheetLoading}
-              >
-                {isFavorite ? (
-                  <>
-                    <BookmarkFilledIcon className="w-4 h-4" />
-                    <span>Désépingler</span>
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="w-4 h-4" />
-                    <span>Epingler</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <div className="w-full">
+                <Button
+                  variant="item"
+                  size="item"
+                  className="space-x-2"
+                  onClick={() => handleFavorite(sheet.id)}
+                  disabled={favoriteSheetLoading}
+                >
+                  {isFavorite ? (
+                    <>
+                      <BookmarkFilledIcon className="w-4 h-4" />
+                      <span>Désépingler</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="w-4 h-4" />
+                      <span>Epingler</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

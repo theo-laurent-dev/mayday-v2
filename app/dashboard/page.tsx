@@ -7,8 +7,11 @@ import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import TabsWrapper from "@/app/dashboard/_components/tabs";
+import { hasPerm } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
+  const session = useSession();
   const { data: userUnpublishedSheets, isLoading } =
     trpc.getUnpublishedUserSheets.useQuery();
 
@@ -21,11 +24,16 @@ export default function Dashboard() {
       <div className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          <div className="flex items-center space-x-2">
-            <Link href={"/sheets/new"} className={buttonVariants()}>
-              Nouvelle fiche
-            </Link>
-          </div>
+          {hasPerm({
+            required: "sheets.create",
+            roles: session?.data?.user.profile.roles,
+          }) && (
+            <div className="flex items-center space-x-2">
+              <Link href={"/sheets/new"} className={buttonVariants()}>
+                Nouvelle fiche
+              </Link>
+            </div>
+          )}
         </div>
         <TabsWrapper userUnpublishedSheets={userUnpublishedSheets} />
       </div>

@@ -162,7 +162,6 @@ export const appRouter = router({
     return await db.sheet.findMany({
       where: {
         obsolete: true,
-        userId,
       },
     });
   }),
@@ -245,7 +244,6 @@ export const appRouter = router({
       const sheet = await db.sheet.findUniqueOrThrow({
         where: {
           id: input.id,
-          userId,
         },
       });
 
@@ -254,7 +252,6 @@ export const appRouter = router({
       const updatedSheet = await db.sheet.update({
         where: {
           id: input.id,
-          userId,
         },
         data: {
           obsolete: true,

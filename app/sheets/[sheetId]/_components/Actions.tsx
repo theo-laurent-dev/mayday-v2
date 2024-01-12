@@ -97,23 +97,13 @@ export default function Actions({
               Signaler obsolète
             </Button>
           )}
-          {currentUser?.id === sheetUserId &&
-            hasPerm({
-              required: "sheets.delete",
-              roles: session?.data?.user.profile.roles,
-            }) && (
-              <>
-                <Separator />
-                <DeleteSheetDialog sheetId={sheetId} />
-              </>
-            )}
           {hasPerm({
             required: "sheets.favorite",
             roles: session?.data?.user.profile.roles,
           }) && (
             <Button
               variant="secondary"
-              disabled={reportSheetLoading || obsolete}
+              disabled={reportSheetLoading}
               onClick={() => handleFavorite(sheetId)}
             >
               {isFavorite ? (
@@ -129,6 +119,16 @@ export default function Actions({
               )}
             </Button>
           )}
+          {currentUser?.id === sheetUserId &&
+            hasPerm({
+              required: "sheets.delete",
+              roles: session?.data?.user.profile.roles,
+            }) && (
+              <>
+                <Separator />
+                <DeleteSheetDialog sheetId={sheetId} />
+              </>
+            )}
         </div>
       </div>
     </div>

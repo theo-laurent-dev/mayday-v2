@@ -71,6 +71,7 @@ const RegisterForm: React.FC = () => {
 
   const { mutate: onRegister, isLoading } = trpc.register.useMutation({
     onSuccess: () => {
+      router.push("/auth/login");
       toast({
         title: "Bienvenue !",
         description: "Tu peux désormais te connecter.",

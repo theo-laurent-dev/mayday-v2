@@ -9,8 +9,11 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { Breadcrumbs, BreadcrumbsSkeleton } from "@/components/ui/breadcrumbs";
+import { hasPerm } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 export default function SheetsPage() {
+  const session = useSession();
   const { data: sheets, isLoading: sheetsLoading } = trpc.getSheets.useQuery();
   const breadcrumbLinks = [
     {
@@ -38,9 +41,14 @@ export default function SheetsPage() {
             <h2 className="text-2xl font-bold tracking-tight">Fiches</h2>
             <p className="text-muted-foreground">Liste des fiches</p>
           </div>
-          <Link href="/sheets/new" className={buttonVariants()}>
-            Nouvelle fiche
-          </Link>
+          {hasPerm({
+            required: "sheets.create",
+            roles: session?.data?.user.profile.roles,
+          }) && (
+            <Link href="/sheets/new" className={buttonVariants()}>
+              Nouvelle fiche
+            </Link>
+          )}
         </div>
         <DataTable data={sheets || []} columns={columns} />
       </div>
