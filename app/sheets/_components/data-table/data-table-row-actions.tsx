@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { SheetWithUserFormSchema } from "@/types/schemas";
-import { AlertOctagon, BookMarked, Bookmark, Eye, Heart } from "lucide-react";
+import { AlertOctagon, Bookmark, Eye } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";

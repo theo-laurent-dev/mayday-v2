@@ -9,6 +9,10 @@ import {
   AccountUpdatePasswordFormSchema,
   ProfileFormSchema,
   RegisterFormSchema,
+  ServicenowAssignmentGroupFormSchema,
+  ServicenowCategoryFormSchema,
+  ServicenowCategoryTypeFormSchema,
+  ServicenowSubCategoryFormSchema,
   SheetFormSchema,
   UserUpdateFormSchema,
 } from "@/types/schemas";
@@ -117,6 +121,10 @@ export const appRouter = router({
       include: {
         user: true,
         favoritesUsers: true,
+        category: true,
+        subcategory: true,
+        categorytype: true,
+        assignmentgroup: true,
       },
     });
   }),
@@ -201,6 +209,10 @@ export const appRouter = router({
         include: {
           user: true,
           favoritesUsers: true,
+          category: true,
+          subcategory: true,
+          categorytype: true,
+          assignmentgroup: true,
         },
       });
       if (!sheet) throw new TRPCError({ code: "NOT_FOUND" });
@@ -363,10 +375,10 @@ export const appRouter = router({
           title: input.title,
           shortDescription: input.shortDescription,
           description: input.description,
-          category: input.category,
-          subcategory: input.subcategory,
-          categoryType: input.categoryType,
-          assignmentGroup: input.assignmentGroup,
+          categoryId: input.categoryId,
+          subcategoryId: input.subcategoryId,
+          categorytypeId: input.categorytypeId,
+          assignmentgroupId: input.assgnmentgroupId,
           criticity: input.criticity,
           type: input.type,
           published: input.published,
@@ -595,10 +607,10 @@ export const appRouter = router({
           title: input.title,
           shortDescription: input.shortDescription,
           description: input.description,
-          category: input.category,
-          subcategory: input.subcategory,
-          categoryType: input.categoryType,
-          assignmentGroup: input.assignmentGroup,
+          categoryId: input.categoryId,
+          subcategoryId: input.subcategoryId,
+          categorytypeId: input.categorytypeId,
+          assignmentgroupId: input.assgnmentgroupId,
           criticity: input.criticity,
           type: input.type,
           published: input.published,
@@ -608,6 +620,345 @@ export const appRouter = router({
       });
 
       return updatedSheet;
+    }),
+  getServicenowCategories: privateProcedure.query(async ({ ctx }) => {
+    return await db.serviceNowCategories.findMany({
+      include: {
+        subcategories: true,
+      },
+    });
+  }),
+  getServicenowCategory: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const category = await db.serviceNowCategories.findFirstOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!category) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return category;
+    }),
+  addServicenowCategories: privateProcedure
+    .input(ServicenowCategoryFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategory = await db.serviceNowCategories.create({
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+        },
+      });
+
+      return snowcategory;
+    }),
+  updateServicenowCategory: privateProcedure
+    .input(ServicenowCategoryFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategory = await db.serviceNowCategories.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+        },
+      });
+
+      return snowcategory;
+    }),
+  deleteServicenowCategories: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategory = await db.serviceNowCategories.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!snowcategory) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.serviceNowCategories.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return snowcategory;
+    }),
+  getServicenowSubCategories: privateProcedure.query(async ({ ctx }) => {
+    return await db.serviceNowSubCategories.findMany({
+      include: {
+        category: true,
+      },
+    });
+  }),
+  getServicenowSubCategory: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const subcategory = await db.serviceNowSubCategories.findFirstOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!subcategory) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return subcategory;
+    }),
+  addServicenowSubCategories: privateProcedure
+    .input(ServicenowSubCategoryFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowsubcategory = await db.serviceNowSubCategories.create({
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+          categoryId: input.categoryId,
+        },
+      });
+
+      return snowsubcategory;
+    }),
+  updateServicenowSubCategory: privateProcedure
+    .input(ServicenowSubCategoryFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowsubcategory = await db.serviceNowSubCategories.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+          categoryId: input.categoryId,
+        },
+      });
+
+      return snowsubcategory;
+    }),
+  deleteServicenowSubCategories: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowsubcategory = await db.serviceNowSubCategories.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!snowsubcategory) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.serviceNowSubCategories.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return snowsubcategory;
+    }),
+  getServicenowCategoryTypes: privateProcedure.query(async ({ ctx }) => {
+    return await db.serviceNowCategoryTypes.findMany();
+  }),
+  getServicenowCategoryType: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const snowcategorytype =
+        await db.serviceNowCategoryTypes.findFirstOrThrow({
+          where: {
+            id: input.id,
+          },
+        });
+
+      if (!snowcategorytype) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return snowcategorytype;
+    }),
+  addServicenowCategoryType: privateProcedure
+    .input(ServicenowCategoryTypeFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategorytype = await db.serviceNowCategoryTypes.create({
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+        },
+      });
+
+      return snowcategorytype;
+    }),
+  updateServicenowCategoryType: privateProcedure
+    .input(ServicenowCategoryTypeFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategorytype = await db.serviceNowCategoryTypes.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          label: input.label,
+          name: input.name,
+          icon: input.icon,
+        },
+      });
+
+      return snowcategorytype;
+    }),
+  deleteServicenowCategoryType: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowcategorytype = await db.serviceNowCategoryTypes.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!snowcategorytype) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.serviceNowCategoryTypes.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return snowcategorytype;
+    }),
+  getServicenowAssignmentGroups: privateProcedure.query(async ({ ctx }) => {
+    const snowassignmentgroups = await db.serviceNowAssignmentGroups.findMany();
+    type Snowassignmentgroup = (typeof snowassignmentgroups)[0];
+    interface GroupedItems {
+      name: string;
+      items: Snowassignmentgroup[];
+    }
+
+    const output: Record<string, GroupedItems> = snowassignmentgroups.reduce(
+      (acc, curr) => {
+        acc[curr.group]
+          ? acc[curr.group].items.push(curr)
+          : (acc[curr.group] = {
+              name: curr.group,
+              items: [curr],
+            });
+        return acc;
+      },
+      {} as Record<string, GroupedItems>
+    );
+    // console.log(Object.values(output));
+
+    return Object.values(output);
+  }),
+  getServicenowAssignmentGroup: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const snowassignmentgroup =
+        await db.serviceNowAssignmentGroups.findFirstOrThrow({
+          where: {
+            id: input.id,
+          },
+        });
+
+      if (!snowassignmentgroup) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return snowassignmentgroup;
+    }),
+  addServicenowAssignmentGroup: privateProcedure
+    .input(ServicenowAssignmentGroupFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowassignmentgroup = await db.serviceNowAssignmentGroups.create({
+        data: {
+          label: input.label,
+          name: input.name,
+          group: input.group,
+        },
+      });
+
+      return snowassignmentgroup;
+    }),
+  updateServicenowAssignmentGroup: privateProcedure
+    .input(ServicenowAssignmentGroupFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowassignmentgroup = await db.serviceNowAssignmentGroups.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          label: input.label,
+          name: input.name,
+          group: input.group,
+        },
+      });
+
+      return snowassignmentgroup;
+    }),
+  deleteServicenowAssignmentGroup: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const snowassignmentgroup = await db.serviceNowAssignmentGroups.findFirst(
+        {
+          where: {
+            id: input.id,
+          },
+        }
+      );
+
+      if (!snowassignmentgroup) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.serviceNowAssignmentGroups.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return snowassignmentgroup;
     }),
 });
 

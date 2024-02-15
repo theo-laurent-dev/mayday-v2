@@ -304,6 +304,57 @@ async function seed() {
     console.log(`* Creation du role "${r.label}" : ${chalk.green("succès")}`)
   );
 
+  //---- SERVICENOW CATEGORIES ----
+  console.log(chalk.cyan("---- SERVICENOW CATEGORIES ----"));
+  const snowcategory = await db.serviceNowCategories.create({
+    data: {
+      name: "businessApp",
+      label: "Business Application",
+      icon: "AppWindow",
+    },
+  });
+  console.log(`Creation de "${snowcategory.label}" : ${chalk.green("succès")}`);
+
+  //---- SERVICENOW SUBCATEGORIES ----
+  console.log(chalk.cyan("---- SERVICENOW SUBCATEGORIES ----"));
+  const snowsubcategory = await db.serviceNowSubCategories.create({
+    data: {
+      name: "erp",
+      label: "ERP",
+      icon: "AppWindow",
+      categoryId: snowcategory.id,
+    },
+  });
+  console.log(
+    `Creation de "${snowsubcategory.label}" : ${chalk.green("succès")}`
+  );
+
+  //---- SERVICENOW CATEGORYTYPES ----
+  console.log(chalk.cyan("---- SERVICENOW CATEGORYTYPES ----"));
+  const snowcategorytype = await db.serviceNowCategoryTypes.create({
+    data: {
+      name: "issue",
+      label: "Incident",
+      icon: "AlertOctagon",
+    },
+  });
+  console.log(
+    `Creation de "${snowcategorytype.label}" : ${chalk.green("succès")}`
+  );
+
+  //---- SERVICENOW ASSIGNEMENTGROUPS ----
+  console.log(chalk.cyan("---- SERVICENOW ASSIGNEMENTGROUPS ----"));
+  const snowassignmentgroup = await db.serviceNowAssignmentGroups.create({
+    data: {
+      name: "fr_app_l2",
+      label: "FR_APP_L2",
+      group: "Applicatif",
+    },
+  });
+  console.log(
+    `Creation de "${snowassignmentgroup.label}" : ${chalk.green("succès")}`
+  );
+
   //---- SHEETS ----
   console.log(chalk.cyan("---- SHEETS ----"));
   const sheet1 = await db.sheet.create({
@@ -312,16 +363,16 @@ async function seed() {
       title: "sheet 1",
       shortDescription: "sheet 1",
       description: "<h1>test</h1>",
-      assignmentGroup: "FR_APP_L2",
       businessApp: "ERP",
-      category: "software",
-      subcategory: "excel",
-      categoryType: "issue",
       criticity: "low",
       published: true,
       type: "procedure",
       company: "nicoll",
       userId: theo.id,
+      categoryId: snowcategory.id,
+      subcategoryId: snowsubcategory.id,
+      categorytypeId: snowcategorytype.id,
+      assignmentgroupId: snowassignmentgroup.id,
     },
   });
   console.log(`Creation de "${sheet1.title}" : ${chalk.green("succès")}`);

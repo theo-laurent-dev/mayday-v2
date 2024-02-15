@@ -1,30 +1,18 @@
-import {
-  ArrowDownIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  CheckCircledIcon,
-  CircleIcon,
-  CrossCircledIcon,
-  QuestionMarkCircledIcon,
-  StopwatchIcon,
-} from "@radix-ui/react-icons";
-import { Building, Building2, GanttChart, Info, Wrench } from "lucide-react";
-
 export const types = [
   {
     value: "procedure",
     label: "Procédure",
-    icon: GanttChart,
+    icon: "GanttChart",
   },
   {
     value: "informative",
     label: "Informatif",
-    icon: Info,
+    icon: "Info",
   },
   {
     value: "maintenance",
     label: "Maintenance",
-    icon: Wrench,
+    icon: "Wrench",
   },
 ];
 
@@ -32,27 +20,27 @@ export const companies = [
   {
     value: "all",
     label: "Toutes",
-    icon: Building2,
+    icon: "Building2",
   },
   {
     value: "nicoll",
     label: "Nicoll",
-    icon: Building,
+    icon: "Building",
   },
   {
     value: "girpi",
     label: "Girpi",
-    icon: Building,
+    icon: "Building",
   },
   {
     value: "aliaxis",
     label: "Aliaxis",
-    icon: Building,
+    icon: "Building",
   },
   {
     value: "aui",
     label: "AUI",
-    icon: Building,
+    icon: "Building",
   },
 ];
 
@@ -78,11 +66,11 @@ export const columnsLabels = [
     label: "Utilisateur",
   },
   {
-    value: "category",
+    value: "categoryId",
     label: "Catégorie",
   },
   {
-    value: "subcategory",
+    value: "subcategoryId",
     label: "Sous-catégorie",
   },
   {
@@ -111,22 +99,22 @@ export const criticities = [
   {
     label: "Basse",
     value: "low",
-    icon: ArrowDownIcon,
+    icon: "ArrowDownIcon",
   },
   {
     label: "Moyenne",
     value: "medium",
-    icon: ArrowRightIcon,
+    icon: "ArrowRightIcon",
   },
   {
     label: "Haute",
     value: "high",
-    icon: ArrowUpIcon,
+    icon: "ArrowUpIcon",
   },
   {
     label: "Critique",
     value: "critical",
-    icon: ArrowUpIcon,
+    icon: "ArrowUpIcon",
   },
 ];
 
@@ -149,11 +137,11 @@ export const userStatuses = [
   {
     value: "true",
     label: "Actif",
-    icon: CheckCircledIcon,
+    icon: "CheckCircledIcon",
   },
   {
     value: "false",
     label: "Inactif",
-    icon: CrossCircledIcon,
+    icon: "CrossCircledIcon",
   },
 ];

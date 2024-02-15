@@ -4,27 +4,33 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import { SheetWithUser } from "@/types/types";
-import { AlertCircle, AlertTriangle, Building, Download } from "lucide-react";
+import {
+  AlertCircle,
+  AlertTriangle,
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  Building,
+  ChevronDown,
+  Download,
+  MoveDown,
+  Users,
+} from "lucide-react";
 import parse from "html-react-parser";
 import Link from "next/link";
-import { categories, categoryTypes, subcategories } from "@/data/sheets";
+import { categoryTypes } from "@/data/sheets";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Icon from "@/components/ui/icon";
 
 interface SheetProps {
   sheet: SheetWithUser | undefined;
 }
 
 export default function Sheet({ sheet }: SheetProps) {
-  const category = categories.find(
-    (category) => category.value === sheet?.category
-  );
-  const subcategory = subcategories.find(
-    (subcategory) => subcategory.value === sheet?.subcategory
-  );
-  const categoryType = categoryTypes.find(
-    (categoryType) => categoryType.value === sheet?.categoryType
-  );
+  // const categoryType = categoryTypes.find(
+  //   (categoryType) => categoryType.value === sheet?.categoryType
+  // );
 
   return (
     <div className="py-4">
@@ -112,32 +118,36 @@ export default function Sheet({ sheet }: SheetProps) {
                 <h5 className="text-md font-semibold tracking-tight">
                   Catégorie
                 </h5>
-                <p className="text-sm text-muted-foreground">
-                  {category?.label}
+                <p className="text-sm text-muted-foreground flex items-center space-x-2">
+                  <Icon name={sheet?.category?.icon} className="w-4 h-4" />
+                  <span>{sheet?.category?.label}</span>
                 </p>
               </div>
               <div>
                 <h5 className="text-md font-semibold tracking-tight">
                   Sous-catégorie
                 </h5>
-                <p className="text-sm text-muted-foreground">
-                  {subcategory?.label}
+                <p className="text-sm text-muted-foreground flex items-center space-x-2">
+                  <Icon name={sheet?.subcategory?.icon} className="w-4 h-4" />
+                  <span>{sheet?.subcategory?.label}</span>
                 </p>
               </div>
               <div>
                 <h5 className="text-md font-semibold tracking-tight">
                   Type de catégorie
                 </h5>
-                <p className="text-sm text-muted-foreground">
-                  {categoryType?.label}
+                <p className="text-sm text-muted-foreground flex items-center space-x-2">
+                  <Icon name={sheet?.categorytype?.icon} className="w-4 h-4" />
+                  <span>{sheet?.categorytype?.label}</span>
                 </p>
               </div>
               <div>
                 <h5 className="text-md font-semibold tracking-tight">
                   {`Groupe d'assignation`}
                 </h5>
-                <p className="text-sm text-muted-foreground">
-                  {sheet?.assignmentGroup}
+                <p className="text-sm text-muted-foreground flex items-center space-x-2">
+                  <Users className="w-4 h-4" />
+                  <span>{sheet?.assignmentgroup?.label}</span>
                 </p>
               </div>
               <div>
@@ -145,19 +155,30 @@ export default function Sheet({ sheet }: SheetProps) {
                   Criticité
                 </h5>
                 <div className="text-sm text-muted-foreground">
-                  <Badge
-                    variant={
-                      sheet?.criticity === "critical" ||
-                      sheet?.criticity === "high"
-                        ? "destructive"
-                        : "secondary"
-                    }
-                  >
-                    {sheet?.criticity === "critical" && "Critique"}
-                    {sheet?.criticity === "high" && "Haute"}
-                    {sheet?.criticity === "medium" && "Moyenne"}
-                    {sheet?.criticity === "low" && "Basse"}
-                  </Badge>
+                  {sheet?.criticity === "critical" && (
+                    <div className="flex items-center space-x-2">
+                      <ArrowUpIcon className="w-4 h-4 text-red-500" />
+                      <span className="text-red-500">Critique</span>
+                    </div>
+                  )}
+                  {sheet?.criticity === "high" && (
+                    <div className="flex items-center space-x-2">
+                      <ArrowUpIcon className="w-4 h-4 text-orange-500" />
+                      <span className="text-orange-500">Haute</span>
+                    </div>
+                  )}
+                  {sheet?.criticity === "medium" && (
+                    <div className="flex items-center space-x-2">
+                      <ArrowRightIcon className="w-4 h-4" />
+                      <span>Moyenne</span>
+                    </div>
+                  )}
+                  {sheet?.criticity === "low" && (
+                    <div className="flex items-center space-x-2">
+                      <ArrowDownIcon className="w-4 h-4" />
+                      <span>Basse</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

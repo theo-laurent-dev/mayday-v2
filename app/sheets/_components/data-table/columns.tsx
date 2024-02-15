@@ -13,8 +13,8 @@ import { DataTableColumnHeader } from "@/app/sheets/_components/data-table/data-
 import { DataTableRowActions } from "@/app/sheets/_components/data-table/data-table-row-actions";
 import { SheetWithUser } from "@/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { categories, subcategories } from "@/data/sheets";
 import { Badge } from "@/components/ui/badge";
+import Icon from "@/components/ui/icon";
 
 export const columns: ColumnDef<SheetWithUser>[] = [
   {
@@ -84,9 +84,12 @@ export const columns: ColumnDef<SheetWithUser>[] = [
 
       return (
         <div className="flex w-[100px] items-center">
-          {companys.icon && (
-            <companys.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {/* {companys.icon && (
+            <Icon
+              name={companys.icon}
+              className="mr-2 h-4 w-4 text-muted-foreground"
+            />
+          )} */}
           <span>{companys.label}</span>
         </div>
       );
@@ -96,25 +99,19 @@ export const columns: ColumnDef<SheetWithUser>[] = [
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "categoryId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Catégorie" />
     ),
     cell: ({ row }) => {
-      const category = categories.find(
-        (category) => category.value === row.getValue("category")
-      );
-
-      if (!category) {
-        return null;
-      }
-
+      const category = row.original.category;
       return (
         <div className="flex w-[160px] items-center">
-          {category.icon && (
-            <category.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{category.label}</span>
+          <Icon
+            name={category?.icon}
+            className="mr-2 h-4 w-4 text-muted-foreground"
+          />
+          <span>{category?.label}</span>
         </div>
       );
     },
@@ -123,25 +120,19 @@ export const columns: ColumnDef<SheetWithUser>[] = [
     },
   },
   {
-    accessorKey: "subcategory",
+    accessorKey: "subcategoryId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Sous-catégorie" />
     ),
     cell: ({ row }) => {
-      const subcategory = subcategories.find(
-        (category) => category.value === row.getValue("subcategory")
-      );
-
-      if (!subcategory) {
-        return null;
-      }
-
+      const subcategory = row.original.subcategory;
       return (
         <div className="flex w-[100px] items-center">
-          {subcategory.icon && (
-            <subcategory.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{subcategory.label}</span>
+          <Icon
+            name={subcategory?.icon}
+            className="mr-2 h-4 w-4 text-muted-foreground"
+          />
+          <span>{subcategory?.label}</span>
         </div>
       );
     },
@@ -155,20 +146,23 @@ export const columns: ColumnDef<SheetWithUser>[] = [
       <DataTableColumnHeader column={column} title="Criticité" />
     ),
     cell: ({ row }) => {
-      const criticity = criticities.find(
+      const criticity = criticities.filter(
         (criticity) => criticity.value === row.getValue("criticity")
       );
 
-      if (!criticity) {
-        return null;
-      }
+      // if (!criticity) {
+      //   return null;
+      // }
 
       return (
         <div className="flex items-center">
-          {criticity.icon && (
-            <criticity.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{criticity.label}</span>
+          {/* {criticity.length > 0 && criticity[0].icon && (
+            <Icon
+              name={criticity[0].icon}
+              className="mr-2 h-4 w-4 text-muted-foreground"
+            />
+          )} */}
+          <span>{criticity.length > 0 && criticity[0].label}</span>
         </div>
       );
     },
@@ -190,9 +184,12 @@ export const columns: ColumnDef<SheetWithUser>[] = [
 
       return (
         <div className="flex items-center">
-          {type.icon && (
-            <type.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {/* {type.icon !== undefined && (
+            <Icon
+              name={type.icon}
+              className="mr-2 h-4 w-4 text-muted-foreground"
+            />
+          )} */}
           <span>{type.label}</span>
         </div>
       );

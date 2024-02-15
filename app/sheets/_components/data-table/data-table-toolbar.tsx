@@ -15,7 +15,6 @@ import {
 } from "@/data/data-table/data-table-constantes";
 import { useEffect, useState } from "react";
 import { trpc } from "@/app/_trpc/client";
-import { categories, subcategories } from "@/data/sheets";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -24,9 +23,15 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const [users, setUsers] = useState<any>([]);
+  const [categories, setCategories] = useState<any>([]);
+  const [subcategories, setSubCategories] = useState<any>([]);
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const { data, isLoading } = trpc.getUsers.useQuery();
+  const { data: categories1, isLoading: categoriesIsLoading } =
+    trpc.getServicenowCategories.useQuery();
+  const { data: subcategories1, isLoading: subcategoriesIsLoading } =
+    trpc.getServicenowSubCategories.useQuery();
 
   useEffect(() => {
     if (!isLoading) {
@@ -38,7 +43,33 @@ export function DataTableToolbar<TData>({
 
       setUsers(u);
     }
-  }, [isLoading, data]);
+    if (!categoriesIsLoading) {
+      const c = categories1?.map((cat) => ({
+        label: cat.label,
+        value: cat.id,
+        icon: cat.icon,
+      }));
+
+      setCategories(c);
+    }
+
+    if (!subcategoriesIsLoading) {
+      const c = subcategories1?.map((cat) => ({
+        label: cat.label,
+        value: cat.id,
+        icon: cat.icon,
+      }));
+
+      setSubCategories(c);
+    }
+  }, [
+    isLoading,
+    data,
+    categoriesIsLoading,
+    categories1,
+    subcategories1,
+    subcategoriesIsLoading,
+  ]);
 
   return (
     <div className="flex items-center justify-between">
@@ -58,16 +89,16 @@ export function DataTableToolbar<TData>({
             options={companies}
           />
         )}
-        {table.getColumn("category") && (
+        {table.getColumn("categoryId") && (
           <DataTableFacetedFilter
-            column={table.getColumn("category")}
+            column={table.getColumn("categoryId")}
             title="Catégories"
             options={categories}
           />
         )}
-        {table.getColumn("subcategory") && (
+        {table.getColumn("subcategoryId") && (
           <DataTableFacetedFilter
-            column={table.getColumn("subcategory")}
+            column={table.getColumn("subcategoryId")}
             title="Sous-catégories"
             options={subcategories}
           />

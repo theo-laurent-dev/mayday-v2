@@ -2,6 +2,13 @@ import { AppRouter } from "@/trpc";
 import { JsonValue } from "@prisma/client/runtime/library";
 import type { inferRouterOutputs } from "@trpc/server";
 import { ReactNode } from "react";
+import {
+  ServicenowAssignmentGroupFormSchema,
+  ServicenowCategoryFormSchema,
+  ServicenowCategoryTypeFormSchema,
+  ServicenowSubCategoryFormSchema,
+} from "@/types/schemas";
+import { z } from "zod";
 
 type HOC = {
   children: ReactNode;
@@ -19,11 +26,11 @@ export type sheet = {
   description: string | null;
   ref: string | null;
   type: string | null;
-  category: string | null;
-  subcategory: string | null;
-  categoryType: string | null;
+  categoryId: string | null;
+  subcategoryId: string | null;
+  categorytypeId: string | null;
   criticity: string | null;
-  assignmentGroup: string | null;
+  assignmentgroupId: string | null;
   businessApp: string | null;
   published: boolean | null;
   company: string | null;
@@ -82,6 +89,22 @@ export type CurrentUser = {
     permissions: JsonValue;
   };
 };
+
+export type ServicenowCategoryValues = z.infer<
+  typeof ServicenowCategoryFormSchema
+>;
+
+export type ServicenowSubCategoryValues = z.infer<
+  typeof ServicenowSubCategoryFormSchema
+>;
+
+export type ServicenowCategoryTypeValues = z.infer<
+  typeof ServicenowCategoryTypeFormSchema
+>;
+
+export type ServicenowAssignmentGroupValues = z.infer<
+  typeof ServicenowAssignmentGroupFormSchema
+>;
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 

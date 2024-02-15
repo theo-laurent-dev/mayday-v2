@@ -41,30 +41,10 @@ export const SheetFormSchema = z.object({
       message: "Description must be at least 2 characters.",
     })
     .optional(),
-  category: z
-    .string()
-    .min(2, {
-      message: "Category must be at least 2 characters.",
-    })
-    .optional(),
-  subcategory: z
-    .string()
-    .min(2, {
-      message: "Subcategory must be at least 2 characters.",
-    })
-    .optional(),
-  categoryType: z
-    .string()
-    .min(2, {
-      message: "Category type must be at least 2 characters.",
-    })
-    .optional(),
-  assignmentGroup: z
-    .string()
-    .min(2, {
-      message: "Assignement group must be at least 2 characters.",
-    })
-    .optional(),
+  categoryId: z.string().optional(),
+  subcategoryId: z.string().optional(),
+  categorytypeId: z.string().optional(),
+  assgnmentgroupId: z.string().optional(),
   criticity: z
     .string()
     .min(2, {
@@ -108,6 +88,53 @@ export const UserUpdateFormSchema = z.object({
   profileId: z.string(),
 });
 
+export const ServicenowCategoryFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  label: z.string().min(2, {
+    message: "Label must be at least 2 characters.",
+  }),
+  icon: z.string(),
+});
+
+export const ServicenowSubCategoryFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  label: z.string().min(2, {
+    message: "Label must be at least 2 characters.",
+  }),
+  icon: z.string(),
+  categoryId: z.string(),
+});
+
+export const ServicenowCategoryTypeFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  label: z.string().min(2, {
+    message: "Label must be at least 2 characters.",
+  }),
+  icon: z.string(),
+});
+
+export const ServicenowAssignmentGroupFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  label: z.string().min(2, {
+    message: "Label must be at least 2 characters.",
+  }),
+  group: z.string().min(2, {
+    message: "Group must be at least 2 characters.",
+  }),
+});
+
 export const SheetWithUserFormSchema = z.object({
   id: z.string(),
   shortId: z.string().nullable(),
@@ -126,25 +153,25 @@ export const SheetWithUserFormSchema = z.object({
       message: "Description must be at least 2 characters.",
     })
     .nullable(),
-  category: z
+  categoryId: z
     .string()
     .min(2, {
       message: "Category must be at least 2 characters.",
     })
     .nullable(),
-  subcategory: z
+  subcategoryId: z
     .string()
     .min(2, {
       message: "Subcategory must be at least 2 characters.",
     })
     .nullable(),
-  categoryType: z
+  categorytypeId: z
     .string()
     .min(2, {
       message: "Category type must be at least 2 characters.",
     })
     .nullable(),
-  assignmentGroup: z
+  assignmentgroupId: z
     .string()
     .min(2, {
       message: "Assignement group must be at least 2 characters.",
@@ -172,6 +199,10 @@ export const SheetWithUserFormSchema = z.object({
   obsolete: z.boolean().default(false),
   createdAt: z.string(),
   updatedAt: z.string(),
+  category: ServicenowCategoryFormSchema,
+  subcategory: ServicenowSubCategoryFormSchema,
+  categorytype: ServicenowCategoryTypeFormSchema,
+  assignmentgroup: ServicenowAssignmentGroupFormSchema,
   user: UserFormSchema,
   favoritesUsers: z.array(UserFormSchema),
 });

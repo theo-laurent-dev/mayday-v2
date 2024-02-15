@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Icon from "@/components/ui/icon";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -28,7 +29,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   options: {
     label: string;
     value: string;
-    icon?: React.ComponentType<{ className?: string }>;
+    icon?: string;
     avatar?: boolean;
   }[];
 }
@@ -127,7 +128,10 @@ export function DataTableFacetedFilter<TData, TValue>({
                       </div>
                     )}
                     {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <Icon
+                        name={option.icon}
+                        className="mr-2 h-4 w-4 text-muted-foreground"
+                      />
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (

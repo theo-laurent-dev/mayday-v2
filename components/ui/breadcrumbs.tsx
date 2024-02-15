@@ -15,7 +15,9 @@ interface Breadcrumbs extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Breadcrumbs({ breadcrumbLinks, className }: Breadcrumbs) {
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
+    <div
+      className={cn("hidden md:flex md:items-center md:space-x-2", className)}
+    >
       {breadcrumbLinks &&
         Array.isArray(breadcrumbLinks) &&
         breadcrumbLinks.map((breadcrumbLink, index) => (

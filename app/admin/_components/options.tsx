@@ -135,13 +135,13 @@ export default function Options() {
                           <DropdownMenuPortal>
                             <DropdownMenuSubContent>
                               <DropdownMenuItem>
-                                <GanttChart className="mr-2 h-4 w-4" />
-                                <span>Liste</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                <span>Créer</span>
+                                <Link
+                                  href={`/admin/sheets/servicenow/categories`}
+                                  className="flex items-center space-x-2 w-full"
+                                >
+                                  <GanttChart className="h-4 w-4" />
+                                  <span>Liste</span>
+                                </Link>
                               </DropdownMenuItem>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>
@@ -154,13 +154,13 @@ export default function Options() {
                           <DropdownMenuPortal>
                             <DropdownMenuSubContent>
                               <DropdownMenuItem>
-                                <GanttChart className="mr-2 h-4 w-4" />
-                                <span>Liste</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                <span>Créer</span>
+                                <Link
+                                  href={`/admin/sheets/servicenow/subcategories`}
+                                  className="flex items-center space-x-2 w-full"
+                                >
+                                  <GanttChart className="h-4 w-4" />
+                                  <span>Liste</span>
+                                </Link>
                               </DropdownMenuItem>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>
@@ -176,10 +176,24 @@ export default function Options() {
                                 <GanttChart className="mr-2 h-4 w-4" />
                                 <span>Liste</span>
                               </DropdownMenuItem>
-                              <DropdownMenuSeparator />
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                            <Group className="mr-2 h-4 w-4" />
+                            <span>{`Groupes d'assignation`}</span>
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
                               <DropdownMenuItem>
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                <span>Créer</span>
+                                <Link
+                                  href={`/admin/sheets/servicenow/assignmentgroups`}
+                                  className="flex items-center space-x-2 w-full"
+                                >
+                                  <GanttChart className="h-4 w-4" />
+                                  <span>Liste</span>
+                                </Link>
                               </DropdownMenuItem>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>
