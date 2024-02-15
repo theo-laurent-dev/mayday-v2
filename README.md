@@ -39,8 +39,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - `NEXTAUTH_SECRET=123456789abcdefghijklmnopqrstuvwxyz`
 - `NEXT_PUBLIC_TINYMCE_API_KEY=tvro04mz48z6wrzc4ek5xa4akpxfcq4qge4c39td4w5j96rm`
 
+## Database
+
+- `set "type": "module" in package.json`
+- `npx prisma db push`
+- `npx prisma generate`
+- `npx prisma db seed`
+- `delete "type": "module" in package.json`
+
 ## Start
 
 - `npm install`
-- `npx prisma db push`
-- `npx prisma generate`
