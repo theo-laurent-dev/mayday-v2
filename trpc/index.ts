@@ -1,4 +1,4 @@
-import { privateProcedure, publicProcedure, router } from "./trpc";
+import { privateProcedure, publicProcedure, router } from "@/trpc/trpc";
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
@@ -159,6 +159,10 @@ export const appRouter = router({
       include: {
         user: true,
         favoritesUsers: true,
+        category: true,
+        subcategory: true,
+        categorytype: true,
+        assignmentgroup: true,
       },
     });
   }),
