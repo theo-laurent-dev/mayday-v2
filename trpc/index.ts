@@ -16,6 +16,7 @@ import {
   SheetFormSchema,
   UserUpdateFormSchema,
 } from "@/types/schemas";
+import { groupItems } from "@/lib/utils";
 
 export const appRouter = router({
   register: publicProcedure
@@ -866,25 +867,8 @@ export const appRouter = router({
     }),
   getServicenowAssignmentGroups: privateProcedure.query(async ({ ctx }) => {
     const snowassignmentgroups = await db.serviceNowAssignmentGroups.findMany();
-    type Snowassignmentgroup = (typeof snowassignmentgroups)[0];
-    interface GroupedItems {
-      name: string;
-      items: Snowassignmentgroup[];
-    }
 
-    const output: Record<string, GroupedItems> = snowassignmentgroups.reduce(
-      (acc, curr) => {
-        acc[curr.group]
-          ? acc[curr.group].items.push(curr)
-          : (acc[curr.group] = {
-              name: curr.group,
-              items: [curr],
-            });
-        return acc;
-      },
-      {} as Record<string, GroupedItems>
-    );
-    // console.log(Object.values(output));
+    const output = groupItems(snowassignmentgroups);
 
     return Object.values(output);
   }),

@@ -10,6 +10,15 @@ import {
 } from "@/types/schemas";
 import { z } from "zod";
 
+interface Item {
+  group: string;
+}
+
+export interface GroupedItems {
+  name: string;
+  items: Item[];
+}
+
 type HOC = {
   children: ReactNode;
 };

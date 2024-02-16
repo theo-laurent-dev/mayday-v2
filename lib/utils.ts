@@ -1,4 +1,4 @@
-import { RolesWithApplications } from "@/types/types";
+import { GroupedItems, RolesWithApplications } from "@/types/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,19 +12,6 @@ export function absoluteUrl(path: string) {
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
 
-// export function hasPerm({
-//   required,
-//   roles,
-// }: {
-//   required: string;
-//   roles: RolesWithApplications;
-// }) {
-//   const filteredRoles = roles.filter(
-//     (r) => `${r.application.name}.${r.name}` === required
-//   );
-//   return filteredRoles.length > 0;
-// }
-
 export function hasPerm({
   required,
   roles,
@@ -37,13 +24,18 @@ export function hasPerm({
   );
 
   return requiredIsInclude.length > 0;
+}
 
-  // const results = roles.map((fr) => ({
-  //   label: `${fr.application.name}.${fr.name}`,
-  //   authorized: required.includes(`${fr.application.name}.${fr.name}`),
-  // }));
-
-  // const authorized = results.filter((r) => r.authorized === true);
-
-  // return { results, authorized };
+export function groupItems<T extends { group: string }>(
+  listOfItems: T[]
+): Record<string, GroupedItems> {
+  return listOfItems.reduce((acc, curr) => {
+    acc[curr.group]
+      ? acc[curr.group].items.push(curr)
+      : (acc[curr.group] = {
+          name: curr.group,
+          items: [curr],
+        });
+    return acc;
+  }, {} as Record<string, GroupedItems>);
 }
