@@ -23,7 +23,13 @@ import { ProfileFormSchema } from "@/types/schemas";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { ApplicationsWithRoles, ProfileWithRole } from "@/types/types";
+import {
+  ApplicationWithRoles,
+  ApplicationsWithRoles,
+  ProfileWithRole,
+  profile,
+  role,
+} from "@/types/types";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
@@ -42,7 +48,7 @@ export default function ProfileForm({
   const utils = trpc.useContext();
   const { mutate: updateProfile, isLoading: isUpdating } =
     trpc.updateProfile.useMutation({
-      onSuccess: (data: any) => {
+      onSuccess: (data: profile) => {
         router.push(`/admin/profiles/${data.id}`);
         utils.getProfile.reset();
         toast({
@@ -156,7 +162,7 @@ export default function ProfileForm({
                       </FormDescription>
                     </div>
                     <div className="grid grid-cols-3 gap-3">
-                      {applications.map((app: any) => {
+                      {applications.map((app: ApplicationWithRoles) => {
                         return (
                           <FormField
                             key={app.id}
@@ -202,7 +208,7 @@ export default function ProfileForm({
                                     </div>
                                   </CardHeader>
                                   <CardContent className="space-y-2">
-                                    {app.roles.map((role: any) => (
+                                    {app.roles.map((role: role) => (
                                       <FormField
                                         key={role.id}
                                         control={form.control}

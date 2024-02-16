@@ -41,10 +41,11 @@ import {
   Info,
   Wrench,
 } from "lucide-react";
-import { categories, categoryTypes, subcategories } from "@/data/sheets";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SheetWithUser } from "@/types/types";
+import Icon from "@/components/ui/icon";
+import { EditorEvent } from "tinymce";
 
 interface SheetEditPageProps {
   sheet: SheetWithUser | undefined;
@@ -59,6 +60,15 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
     resolver: zodResolver(SheetFormSchema),
   });
 
+  const { data: categories, isLoading: categoriesLoading } =
+    trpc.getServicenowCategories.useQuery();
+  const { data: subcategories, isLoading: subcategoriesLoading } =
+    trpc.getServicenowSubCategories.useQuery();
+  const { data: categorytypes, isLoading: categorytypesLoading } =
+    trpc.getServicenowCategoryTypes.useQuery();
+  const { data: assignmentgroups, isLoading: assignmentgroupsLoading } =
+    trpc.getServicenowAssignmentGroups.useQuery();
+
   const { mutate: adminUpdateSheet, isLoading: isUpdating } =
     trpc.adminUpdateSheet.useMutation({
       onSuccess: (data) => {
@@ -70,14 +80,14 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
       },
     });
 
-  const handleEditorChange = (content: any, editor: any) => {
+  const handleEditorChange = (content: EditorEvent<any>) => {
     form.setValue("description", content.level.content);
   };
 
   const handleCategoryChange = (value: string) => {
-    form.resetField("subcategory");
+    form.resetField("subcategoryId");
     if (value !== undefined) {
-      form.setValue("category", value);
+      form.setValue("categoryId", value);
       setSubcategoriesDisabled(false);
       return;
     }
@@ -235,8 +245,8 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
             <Separator />
             <FormField
               control={form.control}
-              name="category"
-              defaultValue={sheet?.category || ""}
+              name="categoryId"
+              defaultValue={sheet?.categoryId || ""}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Catégorie</FormLabel>
@@ -250,14 +260,15 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.value}>
-                          <div className="flex items-center space-x-2">
-                            <category.icon className="w-4 h-4" />
-                            <span>{category.label}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
+                      {categories &&
+                        categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            <div className="flex items-center space-x-2">
+                              <Icon name={category.icon} className="w-4 h-4" />
+                              <span>{category.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -266,8 +277,8 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
             />
             <FormField
               control={form.control}
-              name="subcategory"
-              defaultValue={sheet?.subcategory || ""}
+              name="subcategoryId"
+              defaultValue={sheet?.subcategoryId || ""}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Sous-catégorie</FormLabel>
@@ -282,21 +293,26 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {subcategories
-                        .filter(
-                          (sb) => sb.category === form.getValues("category")
-                        )
-                        .map((subcategory) => (
-                          <SelectItem
-                            key={subcategory.id}
-                            value={subcategory.value}
-                          >
-                            <div className="flex items-center space-x-2">
-                              <subcategory.icon className="w-4 h-4" />
-                              <span>{subcategory.label}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
+                      {subcategories &&
+                        subcategories
+                          .filter(
+                            (sb) =>
+                              sb.categoryId === form.getValues("categoryId")
+                          )
+                          .map((subcategory) => (
+                            <SelectItem
+                              key={subcategory.id}
+                              value={subcategory.id}
+                            >
+                              <div className="flex items-center space-x-2">
+                                <Icon
+                                  name={subcategory.icon}
+                                  className="w-4 h-4"
+                                />
+                                <span>{subcategory.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -305,8 +321,8 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
             />
             <FormField
               control={form.control}
-              name="categoryType"
-              defaultValue={sheet?.categoryType || ""}
+              name="categorytypeId"
+              defaultValue={sheet?.categorytypeId || ""}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type de catégorie</FormLabel>
@@ -320,17 +336,21 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categoryTypes.map((categoryType) => (
-                        <SelectItem
-                          key={categoryType.id}
-                          value={categoryType.value}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <categoryType.icon className="w-4 h-4" />
-                            <span>{categoryType.label}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
+                      {categorytypes &&
+                        categorytypes.map((categoryType) => (
+                          <SelectItem
+                            key={categoryType.id}
+                            value={categoryType.id}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <Icon
+                                name={categoryType.icon}
+                                className="w-4 h-4"
+                              />
+                              <span>{categoryType.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -455,8 +475,8 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
             <Separator />
             <FormField
               control={form.control}
-              name="assignmentGroup"
-              defaultValue={sheet?.assignmentGroup || ""}
+              name="assgnmentgroupId"
+              defaultValue={sheet?.assignmentgroupId || ""}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{`Groupe d'assignation`}</FormLabel>
@@ -470,23 +490,18 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Applicatif</SelectLabel>
-                        <SelectItem value="FR_APP_L2">FR_APP_L2</SelectItem>
-                        <SelectItem value="FR_APP_L3">FR_APP_L3</SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Proximité</SelectLabel>
-                        <SelectItem value="FR_EUT_L2">FR_EUT_L2</SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Infrastructure</SelectLabel>
-                        <SelectItem value="EMA_DC_L2">EMA_DC_L2</SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Réseau</SelectLabel>
-                        <SelectItem value="EMA_NS_L2">EMA_NS_L2</SelectItem>
-                      </SelectGroup>
+                      {assignmentgroups &&
+                        assignmentgroups.map((assignmentgroup) => (
+                          <SelectGroup key={assignmentgroup.name}>
+                            <SelectLabel>{assignmentgroup.name}</SelectLabel>
+                            {assignmentgroup.items.length > 0 &&
+                              assignmentgroup.items.map((item) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.label}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>

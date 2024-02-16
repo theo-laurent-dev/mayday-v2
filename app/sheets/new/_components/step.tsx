@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import Icon from "@/components/ui/icon";
+import { EditorEvent } from "tinymce";
 
 const steps = [
   { label: "Etape 1", description: "Titre" },
@@ -85,7 +86,7 @@ export default function StepperSheetCreation({
   const { data: assignmentgroups, isLoading: assignmentgroupsLoading } =
     trpc.getServicenowAssignmentGroups.useQuery();
 
-  const handleEditorChange = (content: any, editor: any) => {
+  const handleEditorChange = (content: EditorEvent<any>) => {
     // console.log("Content was updated:", content.level.content);
     form.setValue("description", content.level.content);
   };

@@ -45,6 +45,7 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SheetWithUser } from "@/types/types";
 import Icon from "@/components/ui/icon";
+import { EditorEvent } from "tinymce";
 
 interface SheetEditPageProps {
   sheet: SheetWithUser | undefined;
@@ -80,7 +81,7 @@ export default function SheetEditPage({ sheet }: SheetEditPageProps) {
       },
     });
 
-  const handleEditorChange = (content: any, editor: any) => {
+  const handleEditorChange = (content: EditorEvent<any>) => {
     form.setValue("description", content.level.content);
   };
 

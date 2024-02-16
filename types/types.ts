@@ -12,6 +12,8 @@ import { z } from "zod";
 
 interface Item {
   group: string;
+  id: string;
+  label: string;
 }
 
 export interface GroupedItems {
@@ -71,9 +73,17 @@ export type role = {
   id: string;
   createdAt: string;
   updatedAt: string;
-  profileId: string;
   label: string;
   applicationId: string;
+};
+
+export type profile = {
+  name: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  label: string;
+  permissions: JsonValue;
 };
 
 export type CurrentUser = {
@@ -89,14 +99,7 @@ export type CurrentUser = {
 
   createdAt: Date;
   updatedAt: Date;
-  profile: {
-    name: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    label: string;
-    permissions: JsonValue;
-  };
+  profile: profile;
 };
 
 export type ServicenowCategoryValues = z.infer<

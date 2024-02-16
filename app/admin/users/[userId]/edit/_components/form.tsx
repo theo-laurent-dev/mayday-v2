@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
-import { ProfilesWithRole, UserWithRole } from "@/types/types";
+import { ProfilesWithRole, UserWithRole, user } from "@/types/types";
 
 interface UserEditFormProps {
   user: UserWithRole;
@@ -40,7 +40,7 @@ export default function UserEditForm({ user, profiles }: UserEditFormProps) {
   const utils = trpc.useContext();
   const { mutate: updateUser, isLoading: isUpdating } =
     trpc.updateUser.useMutation({
-      onSuccess: (data: any) => {
+      onSuccess: (data: user) => {
         router.push(`/admin/users/${data.id}`);
         utils.getUser.reset();
         toast({
