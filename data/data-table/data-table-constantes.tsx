@@ -93,6 +93,10 @@ export const columnsLabels = [
     value: "roleId",
     label: "Role",
   },
+  {
+    value: "profileId",
+    label: "Profil",
+  },
 ];
 
 export const criticities = [
