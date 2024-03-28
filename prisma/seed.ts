@@ -4,7 +4,6 @@ import chalk from "chalk";
 const db = new PrismaClient();
 
 //---- TO RUN SEED ----
-// > set "type": "module" in package.json
 // > npx prisma migrate reset
 // > npx prisma db push
 // > npx prisma generate
