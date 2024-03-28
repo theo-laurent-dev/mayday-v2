@@ -1,26 +1,31 @@
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { GanttChart, Tag, Tags, Users } from "lucide-react";
 import Link from "next/link";
 
 export default function AdminSheetsPage() {
-  const breadcrumbLinks = [
-    {
-      label: "Administration",
-      href: "/admin",
-      current: false,
-    },
-    {
-      label: "Fiches",
-      href: "/admin/sheets",
-      current: true,
-    },
-  ];
   return (
     <HasPermissionShield required="admin.*">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin">Administration</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Fiches</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">

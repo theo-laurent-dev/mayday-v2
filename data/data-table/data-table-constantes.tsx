@@ -103,22 +103,22 @@ export const criticities = [
   {
     label: "Basse",
     value: "low",
-    icon: "ArrowDownIcon",
+    icon: "ArrowDown",
   },
   {
     label: "Moyenne",
     value: "medium",
-    icon: "ArrowRightIcon",
+    icon: "ArrowRight",
   },
   {
     label: "Haute",
     value: "high",
-    icon: "ArrowUpIcon",
+    icon: "ArrowUp",
   },
   {
     label: "Critique",
     value: "critical",
-    icon: "ArrowUpIcon",
+    icon: "ArrowUp",
   },
 ];
 

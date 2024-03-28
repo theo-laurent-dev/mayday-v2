@@ -7,21 +7,16 @@ import { columns } from "@/app/admin/users/_components/data-table/columns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function UsersPage() {
-  const breadcrumbLinks = [
-    {
-      label: "Administration",
-      href: "/admin",
-      current: false,
-    },
-    {
-      label: "Utilisateurs",
-      href: "/admin/users",
-      current: true,
-    },
-  ];
   const { data: users, isLoading: usersLoading } = trpc.getUsers.useQuery();
 
   if (usersLoading) {
@@ -31,7 +26,17 @@ export default function UsersPage() {
   return (
     <HasPermissionShield required="users.view">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin">Administration</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Utilisateurs</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">

@@ -2,30 +2,20 @@
 
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
 import { trpc } from "@/app/_trpc/client";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { DataTable } from "./_components/data-table/data-table";
 import { columns } from "./_components/data-table/columns";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function AdminSheetsObsoletesPage() {
   const { data: obsoletesSheets, isLoading } =
     trpc.getObsoletesSheets.useQuery();
-  const breadcrumbLinks = [
-    {
-      label: "Administration",
-      href: "/admin",
-      current: false,
-    },
-    {
-      label: "Fiches",
-      href: "/admin/sheets",
-      current: false,
-    },
-    {
-      label: "Obsolètes",
-      href: "/admin/sheets/obsoletes",
-      current: true,
-    },
-  ];
 
   if (isLoading) {
     return "Chargement ...";
@@ -34,7 +24,22 @@ export default function AdminSheetsObsoletesPage() {
   return (
     <HasPermissionShield required="admin.*">
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin">Administration</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin/sheets">Fiches</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Obsolètes</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">

@@ -1,38 +1,43 @@
 "use client";
 
 import { HasPermissionShield } from "@/app/_components/HasPermissionShield";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Separator } from "@/components/ui/separator";
 import CategoryTypesList from "@/app/admin/sheets/servicenow/categorytypes/_components/categorytypes-list";
 import { AddCategoryType } from "@/app/admin/sheets/servicenow/categorytypes/_components/add-categorytype";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function AdminSheetsServicenowCategoriesPage() {
-  const breadcrumbLinks = [
-    {
-      label: "Administration",
-      href: "/admin",
-      current: false,
-    },
-    {
-      label: "Fiches",
-      href: "/admin/sheets",
-      current: false,
-    },
-    {
-      label: "ServiceNow",
-      href: "/admin/sheets/servicenow",
-      current: false,
-    },
-    {
-      label: "Types de catégorie",
-      href: "/admin/sheets/servicenow/categorytypes",
-      current: true,
-    },
-  ];
   return (
     <HasPermissionShield required="admin.*">
       <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <Breadcrumbs breadcrumbLinks={breadcrumbLinks} />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin">Administration</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin/sheets">Fiches</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin/sheets/servicenow">
+                ServiceNow
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Types de catégories</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">

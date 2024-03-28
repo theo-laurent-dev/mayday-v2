@@ -23,9 +23,7 @@ export default async function RootLayout({
       <Providers>
         <body className={inter.className}>
           <NextAuthSessionProvider>
-            <main>
-              <Nav>{children}</Nav>
-            </main>
+            <main>{children}</main>
             <Toaster />
           </NextAuthSessionProvider>
         </body>

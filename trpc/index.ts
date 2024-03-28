@@ -1,5 +1,5 @@
 import { privateProcedure, publicProcedure, router } from "@/trpc/trpc";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
@@ -301,7 +301,7 @@ export const appRouter = router({
         },
       });
       const alreadyFavorite = sheet.favoritesUsers.filter(
-        (u) => u.id === user.id
+        (u: any) => u.id === user.id
       );
 
       if (sheet.favoritesUsers.length > 0 && alreadyFavorite.length > 0) {
